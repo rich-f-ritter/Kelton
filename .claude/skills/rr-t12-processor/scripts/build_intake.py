@@ -390,9 +390,18 @@ def write_rent_roll(ws, rr: il.RentRoll, hd):
         for c in range(1, ncore + 1):
             ws.merge_cells(start_row=1, start_column=c, end_row=2, end_column=c)
 
+    # Bed/bath per unit: HelloData joined BY UNIT NUMBER (its documented key) first, then a
+    # per-plan HD mode so units whose plan-name doesn't match HD's still resolve, then the
+    # plan-code/letter inference as a last resort.
+    hd_unit_bb, hd_plan_bb = il.hd_bed_bath_maps(rr, hd)
     r = data_start
     for u in rr.units:
-        bed, bath, _src = il.infer_bed_bath(u.floorplan, hd)
+        if u.unit in hd_unit_bb:
+            bed, bath = hd_unit_bb[u.unit]
+        elif u.floorplan in hd_plan_bb:
+            bed, bath = hd_plan_bb[u.floorplan]
+        else:
+            bed, bath, _src = il.infer_bed_bath(u.floorplan, hd)
         zeb = _fill(ZEBRA) if (r - data_start) % 2 == 0 else None
         vals = [u.unit, u.floorplan, u.sqft, bed, bath, u.lease_type, u.occupancy,
                 u.market_rent, u.contract_rent, u.net_effective,

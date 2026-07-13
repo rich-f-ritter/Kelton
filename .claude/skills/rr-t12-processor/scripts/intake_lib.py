@@ -131,6 +131,12 @@ def _month_label(v):
     if _is_date(v):
         return v.strftime("%b %Y"), (v.year, v.month)
     s = _s(v)
+    # Strip a trailing period-type qualifier some operators (ResMan/Yardi) append to
+    # each month header — 'Jun 2025 Actual', 'May 2026 Actuals', 'Jun 2025 Budget' —
+    # so the month itself parses. A pure 'Variance'/'Adjusted Total' column collapses to
+    # a non-month and correctly ends the month run.
+    s = re.sub(r"[\s\(\-]*(actuals?|budget(?:ed)?|forecast|projected|proj|variance)[\s\)]*$",
+               "", s, flags=re.I).strip()
     # try to parse 'Jun 2025', 'Jun-2025', '2025-06', '04/2026', '04-2026', etc.
     for fmt in ("%b %Y", "%b-%Y", "%B %Y", "%m/%Y", "%m-%Y", "%Y-%m", "%Y/%m"):
         try:
@@ -260,8 +266,15 @@ def parse_t12(path: str) -> T12:
     #         monetary amount / sign-flip helper columns. ---
     first_month = month_cols[0]
     nmonths = len(month_cols)
+    # Summary columns sitting to the RIGHT of the month block (Total / YTD / Variance /
+    # Budget / 'Adjusted Total') must be excluded from the GL-number right-scan — their
+    # whole-dollar integer totals otherwise look "code-like" and get mistaken for a GL
+    # account column, which pre-sets a bogus gl on every row and defeats subtotal
+    # detection (double-counting). Match as substrings so 'Adjusted Total' is caught.
+    _summ_hdr = re.compile(r"\b(total|ytd|annual|variance|budget|forecast|adjusted)\b", re.I)
     total_cols = {c for c in range(1, ws.max_column + 1)
-                  if _s(ws.cell(hdr_row, c).value).lower() in ("total", "ytd", "annual")}
+                  if _s(ws.cell(hdr_row, c).value).lower() in ("total", "ytd", "annual")
+                  or _summ_hdr.search(_s(ws.cell(hdr_row, c).value))}
     left = list(range(1, first_month))
     right = [c for c in range(first_month + nmonths, ws.max_column + 1) if c not in total_cols]
     data_rows = [r for r in range(hdr_row + 1, ws.max_row + 1)
@@ -307,14 +320,33 @@ def parse_t12(path: str) -> T12:
         name = _s(desc_rawval)
         if not gl and not name and gl_raw:
             name = gl_raw                 # section/subtotal label sitting in the gl column
+        # HIERARCHICAL / CASCADING-INDENT layout (ResMan 'Trailing Profit & Loss Detail',
+        # some Yardi tree exports): the account label sits in a DIFFERENT left column per
+        # depth — leaf lines in the innermost text column (desc_col), but section and
+        # subtotal labels one or more columns to the LEFT. When desc_col is blank on a
+        # row, coalesce the label from the leftmost left-column text cell (never the GL
+        # number column) so sections/subtotals aren't dropped or mis-read as a number.
+        if not name:
+            for cc in left:
+                if cc == gl_col:
+                    continue
+                cv = _s(ws.cell(r, cc).value)
+                if cv and re.search(r"[A-Za-z]{2,}", cv):
+                    name = cv
+                    break
         # Yardi/Entrata "Ledger Account" exports fuse the GL number into the name in
         # a single column ("4000:Rental Income", "6100 - Payroll") with no separate
         # number column. Split a leading code so section/leaf/rollup detection and
         # categorization behave exactly as in a two-column layout. Requires a 3-6
         # digit code (optional .NN/-NN subaccount) followed by ':' or '-', so plain
-        # names and 'Total …' subtotals are untouched.
+        # names and 'Total …' subtotals are untouched. ResMan hierarchical exports fuse
+        # the code with a plain SPACE ("40100 RENT INCOME"); accept that too, but only
+        # when there is NO dedicated GL column and the code is 4-6 digits, so ordinary
+        # names that happen to start with a number ("401 K Match") are left alone.
         if not gl and name:
             m = re.match(r"^(\d{3,6}(?:[.\-]\d{1,4})*)\s*[:\-]\s*(\S.*)$", name)
+            if not m and gl_col is None:
+                m = re.match(r"^(\d{4,6}(?:[.\-]\d{1,4})*)\s+([A-Za-z].*)$", name)
             if m:
                 gl, name = m.group(1), m.group(2).strip()
         vals = [_num(ws.cell(r, c).value) for c in month_cols]
@@ -741,7 +773,8 @@ def parse_rent_roll(path: str, charge_lookup=None) -> RentRoll:
         a = _s(ws.cell(r, 1).value)
         d = _s(ws.cell(r, 4).value)
         if (a.startswith("Status Summary") or a.startswith("Average Charges")
-                or a.startswith("Future Resident") or d.startswith("Charge Code Summ")):
+                or a.startswith("Future Resident") or d.startswith("Charge Code Summ")
+                or a.startswith("Total Charges") or a.startswith("Property Occupancy")):
             detail_end = r
             break
 
@@ -771,6 +804,42 @@ def parse_rent_roll(path: str, charge_lookup=None) -> RentRoll:
                 unit.actual_charges[nm] = unit.actual_charges.get(nm, 0.0) + act
 
     data_start = hdr_row + (2 if two_row else 1)
+
+    # The unit-id VALUE can sit one column to the LEFT of its 'Unit' header. When the
+    # value lives in a merged cell (ResMan/Neighborly rolls merge the unit cell across
+    # two columns), it lands in the merge's top-left column while the 'Unit' header text
+    # sits in the next column — so the header-derived c_unit points at an empty column
+    # and 0 units parse. Trust the column that actually carries unit ids in the data
+    # region over the header position.
+    def _unit_hits(cc):
+        if cc < 1 or cc > ws.max_column:
+            return -1
+        return sum(1 for r in range(data_start, min(ws.max_row, data_start + 500) + 1)
+                   if _looks_like_unit(ws.cell(r, cc).value))
+    _best_uc = max([1, max(1, c_unit - 1), c_unit, c_unit + 1], key=_unit_hits)
+    if _unit_hits(_best_uc) > _unit_hits(c_unit):
+        c_unit = _best_uc
+
+    # Some ResMan/Yardi "Rent Roll" exports don't name the charge column "Charge": they
+    # list each unit's charges as DESCRIPTION / AMOUNT sub-rows beneath the unit row
+    # (block format), with no charge-code column at all. Detect that case — a
+    # 'description' column paired with an amount column, with real charge sub-rows
+    # between unit rows — and treat 'description' as the charge column so BLOCK mode
+    # (not flat/wide) runs. Guarded by requiring sub-rows to actually exist, so genuine
+    # flat/wide rolls (one row per unit, no sub-rows) are unaffected.
+    if not c_charge:
+        c_desc = col("description", "charge description", "charge desc")
+        if c_desc and c_sched and c_desc != c_sched:
+            hdrs = subs = 0
+            for r in range(data_start, min(ws.max_row, data_start + 600) + 1):
+                au = ws.cell(r, c_unit).value
+                sqv = ws.cell(r, c_sqft).value if c_sqft else None
+                if _looks_like_unit(au) and isinstance(sqv, (int, float)):
+                    hdrs += 1
+                elif _s(ws.cell(r, c_desc).value) and isinstance(ws.cell(r, c_sched).value, (int, float)):
+                    subs += 1
+            if hdrs and subs >= hdrs:
+                c_charge = c_desc
 
     # ---- FLAT / WIDE format (RealPage OneSite, etc.): ONE row per unit with charges
     #      in COLUMNS rather than charge-code sub-rows. Detected by the absence of a
@@ -1078,6 +1147,32 @@ def _bath_num(b):
         return int(f) if f == int(f) else f
     except (ValueError, TypeError):
         return b
+
+
+def hd_bed_bath_maps(rr, hd):
+    """Bed/bath from HelloData joined to the rent roll BY UNIT NUMBER (HD's documented
+    join key — HD's marketing plan names need not match the rent roll's plan codes).
+    Returns (unit_map, plan_map): {unit_id: (bed, bath)} and {rr_floorplan: (bed, bath)}.
+    The plan_map is the per-plan mode across its HD-covered units, so units a plan shares
+    with HD-covered units still resolve even when the unit itself isn't in HelloData."""
+    from collections import Counter
+    unit_map = {}
+    if hd:
+        for row in hd.rows:
+            un = _s(row.get("Unit", ""))
+            if not un or un in unit_map:
+                continue
+            try:
+                unit_map[un] = (int(float(row.get("Bedrooms"))), _bath_num(row.get("Bathrooms")))
+            except (ValueError, TypeError):
+                continue
+    ctr = {}
+    for u in getattr(rr, "units", []):
+        bb = unit_map.get(u.unit)
+        if bb is not None:
+            ctr.setdefault(u.floorplan, Counter())[bb] += 1
+    plan_map = {plan: c.most_common(1)[0][0] for plan, c in ctr.items()}
+    return unit_map, plan_map
 
 
 # ===========================================================================

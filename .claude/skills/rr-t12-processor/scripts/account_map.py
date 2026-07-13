@@ -112,7 +112,7 @@ def _family_from_section(section_hint):
     if re.search(r"debt service|financing", s):                                   return "nonop"
     if re.search(r"depreciation|amortization", s):                                return "nonop"
     if re.search(r"routine replacement|replacement reserve|replacement expense|"
-                 r"capital (expenditure|improvement|reserve)", s):                return "nonop"
+                 r"capital (expenditure|expense|improvement|reserve)|capital expenses", s): return "nonop"
     if re.search(r"non.?operating|partnership|owner (expense|draw|distribution)|"
                  r"owner['’]s", s):                                               return "nonop"
     if re.search(r"payroll|personnel|salaries|compensation|labor", s):           return "payroll"
@@ -268,6 +268,7 @@ def _split_nonop(n, default="onoe"):
     if re.search(r"loan (repay|payoff)|repayment", n):                           return "repay"
     if re.search(r"mortgage|note payable|loan payable|notes? payable", n):       return "onoe"
     if re.search(r"reserve", n):                                                 return "rd"
+    if re.search(r"capital expense|capital expenditure|\bcapex\b|\bcap ex(?:p)?", n): return "capx"
     return default
 
 def _split_rent(n):
@@ -364,6 +365,13 @@ def _override(name):
     # Resolve before the management-fee rule below since the line names "fee".
     if re.search(r"lease.?up", n) and re.search(r"\bfee", n):
         return "adv"
+    # ASSET / partnership / corporate management fee is an OWNER-level, NON-operating fee
+    # (distinct from the property-management fee) — operators book it below the NOI line and
+    # RedIQ excludes it from OpEx/NOI. Resolve before the property-management-fee rule so it
+    # is not swept into operating `mgt`. (Kelton: 'Asset Management Fees', $48.7k/yr, below
+    # the operator's NOI line — matches RedIQ.)
+    if re.search(r"asset manage?ment|partnership manage?ment|corporate manage?ment fee", n):
+        return "onoe"
     # Management fee -> mgt regardless of section/spelling ('Managment' typo seen in the
     # wild). Requires 'fee' so 'asset/property management PAYROLL' lines stay payroll.
     if re.search(r"manage?ment fee", n):
@@ -483,7 +491,7 @@ def categorize_t12_line(name, side, section_hint=None, acct_number=None):
 # ---------------------------------------------------------------------------
 CHARGE_RULES = [
     (r"amenity rent|premium|view premium|floor premium|upgrade premium", "Rentinc", True,  True),
-    (r"^rent$|base rent|market rent|gross rent|apartment rent",          "Rentinc", True,  True),
+    (r"^rent$|base rent|market rent|gross rent|apartment rent|^resident rent$", "Rentinc", True,  True),
     (r"loss to lease|gain to lease|loss/gain",                           "ltl",  False, True),
     (r"concession|free rent|employee concession",                        "conc", False, True),
     (r"parking|carport|garage|storage",                                  "park", False, True),
