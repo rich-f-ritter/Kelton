@@ -75,3 +75,37 @@ The $/door gap ($66.9k) comes from two things:
 2. **Multiple (43% of the gap) = value-add premium.** Seasons is bid at a richer 20.6× (tighter cap) because it carries a **~22% loss-to-lease** (in-place $1,473 vs the model's $1,902 market) vs Kelton's **~11%** ($1,483 vs $1,664) — far more embedded mark-to-market for a buyer to pay up for. **Caveat:** Seasons' $1,902 GPR market rent is ~29% above HelloData's $1,473 read, so that upside (and the price it justifies) looks aggressive and should be verified.
 
 **Bottom line:** Kelton isn't the lower-quality asset — newer, bigger units, comparable rents. It's simply **bid at a cheaper basis (higher going-in cap) with less assumed upside**, while Seasons is bid up on a large (possibly aggressive) value-add roll. That cheaper Kelton basis is exactly why its *unlevered* IRR is higher despite weaker growth — and part of that basis advantage is the aggressive tax reassess-DOWN, which flatters both interim NOI and the residual.
+
+---
+
+## CORRECTION (deeper trace — supersedes the surface read in "Follow-up 2")
+
+Traced the **actual forward cash flows** that drive the unlevered IRR (Cash Flow (Annual), cols K–O = Yr 1–5). Three things in my earlier read were wrong:
+
+**1. Seasons' Year-1 market rent is $1,473 — NOT $1,902.** The $1,902 was a stale **T12 GPR artifact** (the Operating Proforma's Y0 GPR ÷ units), not what drives the deal. In the forward build both properties sit at essentially the **same market rent** (Kelton $1,465, Seasons $1,473). So there is **no rent-level gap and no 22% loss-to-lease** — I retract that framing. Seasons' Y1 (LTL)/GTL is only −$731.
+
+**2. Seasons' upside is a renovation program, not a loss-to-lease burn-off.** The real value-add line is `Value Add Revenue`: $0 → $86k → $355k → $627k → **$760k** (Yr 1→5), funded by `Value-Add Capital Expenses` of ~**$4.9M** over the hold. That's why rent/occupied-unit grows **+23.5%** (Seasons $1,449→$1,791) vs Kelton **+13.5%** ($1,424→$1,616).
+
+**3. Kelton's higher "Utilities" is a bulk media bundle, not inefficiency.** Line detail:
+- Kelton `Utilities` $492k includes **`67100 TV, INTERNET, PHONE = $185,201`** (bulk resident media), offset by **`42190 TVCABLE INCOME = $290,428`** in Other Income → the media program is **net +$105k to NOI**, not a cost drag.
+- Seasons has **no** bulk media: `Total Other Revenue Share = $0`, and its utility detail is only water/sewer/common electric-gas/fees (no TV/Internet line).
+- Strip the $185k media out and Kelton's **core** utilities ≈ **$1,280/unit** vs Seasons **$1,252/unit** — essentially the same. Kelton is **not** less efficient on utilities.
+
+### The real unlevered-IRR drivers (from the cash flows)
+| | Kelton | Seasons |
+|---|---|---|
+| Yr-1 NOI / unit | $11,519 | $13,919 |
+| Yr-1 unlevered CF | $2,224,513 | $4,769,769 |
+| **Yr-1 unlevered yield (CF ÷ basis)** | **4.02%** | **3.65%** |
+| Total capex, Yr 1–5 | ~$1.8M | ~$9.7M (incl ~$4.9M reno) |
+| Rent/occ-unit growth (Y1→Y5) | +13.5% | +23.5% |
+
+- **Kelton wins unlevered (8.24% vs 7.73%)** because it has a **higher day-one cash yield (4.02% vs 3.65%)** and **~$8M less capex reinvestment** over the hold — clean, front-loaded cash.
+- **Seasons is back-loaded and capital-intensive:** its reno drives NOI growth and a bigger reversion ($162.8M vs $67.5M), but it starts at a lower current yield and plows ~$9.7M back in, so unlevered it can't overtake Kelton. **Leverage amplifies the growth/reversion → Seasons flips ahead levered (12.9% vs 11.1%).**
+
+### So why $296k/unit (Seasons) vs $229k/unit (Kelton) — corrected
+Not rents (same), not unit size (Kelton bigger), not utility efficiency (comparable core). The gap is:
+- **NOI/unit (+$2,400 Seasons):** ~$650/unit is **scale** — Kelton spreads fixed opex (payroll, G&A, marketing) over **240 doors vs Seasons' 440**; plus Seasons earns **~$524/unit more parking** ($941 vs $417/unit — structured parking). The media bundle roughly nets out.
+- **Pricing multiple (Seasons 21.3× / 4.70% cap vs Kelton 19.9× / 5.03%):** Seasons is bid richer for its **renovation upside**, not a mark-to-market gap.
+
+**Bottom line (corrected):** two assets at the same rents; Seasons is a **440-unit, higher-parking, reno-driven value-add** carried at a richer multiple, while Kelton is a **smaller (240-unit), stabilized, higher-current-yield** deal bought cheaper. Kelton's scale-driven lower NOI/unit and lighter business plan explain the lower per-door price — and its higher current yield + light capex are exactly why it wins on *unlevered* IRR while Seasons wins *levered*.
