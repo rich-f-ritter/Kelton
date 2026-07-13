@@ -1,0 +1,4 @@
+type,property,units,est_delivery,status,leasing_pace,notes,source
+pipeline,Sanctuary,519,Q1 2026,,,(verify leasing up),
+pipeline,Solhavn,352,Q3 2024,,,(verify leasing up),
+shadow,<latent site / rezoning / land sale>,,,,,potential future supply not in CoStar/RealPage,
