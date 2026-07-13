@@ -1,0 +1,23 @@
+[
+  {
+    "kind": "parcels",
+    "label": "Utah County Parcels LIR (UGRC statewide LIR schema)",
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/Parcels_Utah_LIR/FeatureServer/0/query",
+    "verdict": "reachable",
+    "detail": "HTTP 200"
+  },
+  {
+    "kind": "zoning",
+    "label": "American Fork",
+    "url": "https://maps.afcity.org/arcgis/rest/services/Planning/Zoning2/MapServer/0/query",
+    "verdict": "reachable",
+    "detail": "HTTP 200"
+  },
+  {
+    "kind": "zoning",
+    "label": "Lehi",
+    "url": "https://services5.arcgis.com/rObWD7PYeLl9jJPT/arcgis/rest/services/Lehi_Zoning/FeatureServer/0/query",
+    "verdict": "reachable",
+    "detail": "HTTP 200"
+  }
+]

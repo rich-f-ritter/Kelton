@@ -58,6 +58,7 @@ analysis/                      Our work product
   rr-t12-intake/               Underwriting intake (RR-T12 processor output)
   rent-comps/                  Rent Comps – High Level deliverable
   supply-chart/                5-mile Supply & Absorption chart
+  land-use/                    Land-use / zoning / vacant-supply-threat study
   tax/                         Real-estate tax analysis
   notes/                       Cross-workstream synthesis notes
 
@@ -65,6 +66,7 @@ analysis/                      Our work product
   rr-t12-processor/            Operating-statement + rent-roll standardization/audit
   rent-comps-high-level/       Rent-comp workbook + map + preview
   supply-chart/                Competitive-supply reconciliation + forecast
+  land-use-analysis/           County parcel + municipal zoning classification + threat ranking
 ```
 
 ## Source file inventory
@@ -89,7 +91,7 @@ analysis/                      Our work product
 
 ## Analysis outputs (2026-07-13)
 
-Start with **`analysis/notes/Cross_Workstream_Review.md`** — it ties the four workstreams
+Start with **`analysis/notes/Cross_Workstream_Review.md`** — it ties the workstreams
 into one underwriting picture and cross-checks every shared figure.
 
 | Workstream | Location | Headline |
@@ -97,6 +99,7 @@ into one underwriting picture and cross-checks every shared figure.
 | **Underwriting intake** (RR-T12, audit mode) | `analysis/rr-t12-intake/` | Standardized in-place **NOI $3.01M** (62% margin), occ 93.75%. Operator's printed NOI ($3.36M) overstates true NOI ~$353k by booking taxes+insurance below its NOI line. HD T90 market rent $1,595 / eff $1,501. |
 | **Rent comps – high level** | `analysis/rent-comps/` | Subject **~4% under** comp rent/unit ($1,595 vs $1,660), at par on $/SF. Mark-to-market concentrated in **2BR (−5.2%, 55% of units)** and 3BR. Workbook + satellite map + preview. |
 | **Supply chart** | `analysis/supply-chart/` | 7,632-unit 5-mi inventory; **zero forward pipeline**; re-stabilizes to **95% occ by Y1** under base demand. Workbook + map. |
+| **Land use / supply threat** | `analysis/land-use/` | 12,125-parcel 2-mi study. Subject sits in AF's **most active new-housing corridor**; top threat is a **15-ac by-right TOD site 0.4 mi away** + a **~98-ac development-priced band abutting the subject** (RA-zoned but being platted for attached product). Skewed to **townhome/TOD**, not large garden apartments. Workbook + interactive map. |
 | **Real-estate tax** | `analysis/tax/` | In-place **$302,467/yr** ($1,260/unit); reassessment-on-sale → **~$350k at $300k/unit**. Reconciles the RedIQ tax line to the penny. |
 
 **Underwriting bottom line (from the review):** standardized in-place NOI ≈ **$3.01M**; adding

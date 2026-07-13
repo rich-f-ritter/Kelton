@@ -1,0 +1,55 @@
+{
+  "headline": "The Kelton sits inside American Fork's single most active new-housing corridor, so the competitive supply threat is real but overwhelmingly a TOWNHOME/attached and TOD story rather than large garden-apartment tracts. The concrete near-term threat is the FrontRunner TOD/station area (200 South, ~0.4-0.6 mi north), where dense residential is buildable BY-RIGHT and the city's Station Area Plan explicitly clusters multifamily within a half-mile - including a 15-acre investor-owned TOD parcel ~0.4 mi away. Wrapping the subject on the west and south is a ~120-acre band of development-GRADE vacant land (valued $400-470k/acre, not farm value) that is technically zoned low-density residential-agricultural but is being platted and permitted for attached product in real time: American Fork's project log shows dozens of Edgewater Townhome and Meadowbrook multifamily phases under construction on the very blocks around the subject (480-540 S / 700-1160 W). The binding risk on those large tracts is rezoning momentum, not current entitlement - and American Fork is granting it. Farther southwest, Lehi's agricultural and Planned-Community land toward Utah Lake is a longer-horizon watch (low land values, must be master-planned/rezoned). Genuinely large by-right garden-apartment sites are scarce; most by-right MF capacity is smaller TOD infill, and the biggest land banks still need a rezone. Lakeshore (Shoreline Protection / Marina), highway (UDOT), and government/HOA parcels were screened out as non-developable for apartment supply.",
+  "ranking": [
+    {
+      "match": { "account": "130380068" },
+      "reasoned_threat": "High",
+      "rationale": "The single largest by-right multifamily-capable vacant site near the subject: ~15.3 acres in American Fork's TOD (Transit-Oriented Development) zone, ~0.4 mi NW, owned by BACH INVESTMENTS LLC and assessed at ~$7.0M ($460k/acre = development-grade, not raw land). TOD is form-based and permits dense residential by-right; the city's FrontRunner Station Area Plan (station on 200 South, with UTA double-tracking underway) explicitly clusters multifamily/live-work within a half-mile. Directly competitive future apartment/mixed-use supply within walking distance."
+    },
+    {
+      "match": { "account": "130410080" },
+      "reasoned_threat": "Medium (High-Watch)",
+      "rationale": "The dominant land bank abutting the subject: a ~98-acre assemblage of vacant parcels immediately west (AF RA-1/RA-5 and Lehi A-5), 0.23 mi away, 9 parcels. Base zoning is low-density residential-agricultural (apartments NOT by-right), which would normally be Low - but the land is assessed at $400-470k/acre (development, not farm, value) and it lies in the exact corridor where American Fork is actively platting and permitting attached product (Edgewater Townhomes and Meadowbrook multifamily, dozens of phases under construction at 480-540 S / 700-1160 W). Strong rezoning optionality plus demonstrated, current entitlement momentum. Even built as attached townhomes rather than garden apartments, this adds substantial competitive density immediately next door. Individually-held (owner names withheld for natural persons in the public GIS), consistent with a farm assemblage being sold to builders piecemeal."
+    },
+    {
+      "match": { "account": "130390027" },
+      "reasoned_threat": "Medium (Low-Watch)",
+      "rationale": "~23 acres vacant, ~0.45 mi south, compact (Polsby-Popper 0.78), owned by BLUE SPRING PROPERTIES LLC and assessed ~$460k/acre (development-grade). Zoned AF RA-5 (agricultural; apartments not by-right today) so not an as-of-right threat, but developer-owned, close, compact and priced for development in the active corridor - a realistic rezoning-to-attached candidate on a medium horizon."
+    },
+    {
+      "match": { "account": "130720029" },
+      "reasoned_threat": "Medium (Unknown baseline)",
+      "rationale": "~19 acres vacant in Lehi's Planned Community (PC) district, ~0.9 mi SW. PC is master-plan-driven and Lehi PC areas have historically delivered apartments, so the ceiling is high - but the negotiated plan governs and here land value is low (~$18k/acre), indicating raw/holding land that is not imminently entitled. Real but plan-dependent and longer-dated than the AF corridor tracts."
+    },
+    {
+      "match": { "account": "130420028" },
+      "reasoned_threat": "Medium",
+      "rationale": "~1.1 acres vacant in the AF TOD zone at 518 W 200 S (~0.65 mi N, in the station area), owned by RH JOHNSON CONSTRUCTION INC. By-right dense residential like the larger TOD parcel, but small - meaningful as part of the TOD build-out rather than as a stand-alone complex."
+    },
+    {
+      "match": { "account": "130360017" },
+      "reasoned_threat": "Low-Watch",
+      "rationale": "~51 acres vacant, ~1.0 mi SW, owned by WINDY CITY DEVELOPMENT LLC. A large developer-held holding, but zoned Lehi A-5 (agricultural), low land value (~$61k/acre) and pushed toward Utah Lake - a long-horizon rezone play, not near-term competitive apartment supply."
+    },
+    {
+      "match": { "account": "130160136" },
+      "reasoned_threat": "Low-Watch",
+      "rationale": "~37 acres vacant (Lehi A-5 with a commercial edge), ~0.6 mi N near the freeway. Agricultural today; some commercial/residential rezoning optionality given the corridor, but no MF entitlement now."
+    },
+    {
+      "match": { "account": "130430103" },
+      "reasoned_threat": "Low-Watch",
+      "rationale": "~8.6 acres vacant, ~0.56 mi, owned by HARBOR ENTERPRISES LLC; AF RA-5 (agricultural). Small, close, developer-owned - a plausible attached-product rezone in the active corridor but modest in scale."
+    },
+    {
+      "match": { "account": "130700025" },
+      "reasoned_threat": "Low",
+      "rationale": "~17 acres vacant, ~0.8 mi, owned by WALKING THE WIRE LLC; AF R1-12000 (single-family). Will deliver a single-family subdivision, not apartments - not competitive rental supply."
+    },
+    {
+      "match": { "account": "130750025" },
+      "reasoned_threat": "Low",
+      "rationale": "~19 acres, ~1.8 mi S, owned by HARBOR VIEW DEVELOPMENT LLC; AF PR-2.0 (planned residential at ~2 du/acre) partly in Shoreline Protection, sliver-shaped (PP 0.19), near Utah Lake. Low density and constrained - not an apartment threat despite the developer owner."
+    }
+  ]
+}

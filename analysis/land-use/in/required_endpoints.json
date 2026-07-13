@@ -1,0 +1,44 @@
+[
+  {
+    "host": "services1.arcgis.com",
+    "purpose": "Parcels - Utah County Parcels LIR (UGRC statewide LIR schema)",
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/Parcels_Utah_LIR/FeatureServer/0/query",
+    "group": "BUILD-TIME - Python data pulls (MUST be allowlisted in the run sandbox)"
+  },
+  {
+    "host": "maps.afcity.org",
+    "purpose": "Zoning - American Fork",
+    "url": "https://maps.afcity.org/arcgis/rest/services/Planning/Zoning2/MapServer/0/query",
+    "group": "BUILD-TIME - Python data pulls (MUST be allowlisted in the run sandbox)"
+  },
+  {
+    "host": "services5.arcgis.com",
+    "purpose": "Zoning - Lehi",
+    "url": "https://services5.arcgis.com/rObWD7PYeLl9jJPT/arcgis/rest/services/Lehi_Zoning/FeatureServer/0/query",
+    "group": "BUILD-TIME - Python data pulls (MUST be allowlisted in the run sandbox)"
+  },
+  {
+    "host": "geocoding.geo.census.gov",
+    "purpose": "Subject geocoding (US Census, no key)",
+    "url": null,
+    "group": "SUBJECT GEOCODING - only if you resolve the point via Python (else N/A)"
+  },
+  {
+    "host": "geocode.arcgis.com",
+    "purpose": "Subject geocoding fallback (ArcGIS World Geocoder)",
+    "url": null,
+    "group": "SUBJECT GEOCODING - only if you resolve the point via Python (else N/A)"
+  },
+  {
+    "host": "unpkg.com",
+    "purpose": "Viewer: Leaflet + leaflet-image JS/CSS (loads when the HTML opens)",
+    "url": null,
+    "group": "VIEW-TIME - loaded by the HTML viewer in the browser"
+  },
+  {
+    "host": "server.arcgisonline.com",
+    "purpose": "Viewer: Esri satellite + street basemap tiles",
+    "url": null,
+    "group": "VIEW-TIME - loaded by the HTML viewer in the browser"
+  }
+]
