@@ -109,3 +109,50 @@ Not rents (same), not unit size (Kelton bigger), not utility efficiency (compara
 - **Pricing multiple (Seasons 21.3× / 4.70% cap vs Kelton 19.9× / 5.03%):** Seasons is bid richer for its **renovation upside**, not a mark-to-market gap.
 
 **Bottom line (corrected):** two assets at the same rents; Seasons is a **440-unit, higher-parking, reno-driven value-add** carried at a richer multiple, while Kelton is a **smaller (240-unit), stabilized, higher-current-yield** deal bought cheaper. Kelton's scale-driven lower NOI/unit and lighter business plan explain the lower per-door price — and its higher current yield + light capex are exactly why it wins on *unlevered* IRR while Seasons wins *levered*.
+
+---
+
+## Year-1 per-unit NOI bridge (Kelton $11,519 → Seasons $13,919, +$2,400)
+
+Signed as contribution to **Seasons' NOI/unit advantage** (+ = widens Seasons' lead). Ties exactly.
+
+### Grouped
+| Bucket | Δ /unit | What it is |
+|---|---:|---|
+| Kelton Yr-1 NOI/unit | **$11,519** | starting point |
+| **+ Ancillary income (ex-media)** | **+$1,878** | misc Other Income +$1,675 (Seasons $2,338/u vs Kelton $664) + parking +$525 (Seasons $942 vs $417), less Kelton's higher RUBS −$322 |
+| **+ Fixed-opex scale** | **+$658** | Kelton's payroll/marketing/G&A/contracts/turnover/core-utilities per door are higher, spread over **240 vs 440 units** |
+| **+ Rent kept (concessions/GTL)** | **+$320** | mainly Kelton's heavier concessions (−$356/u) + small GTL/vacancy items |
+| **− Kelton media bundle margin** | **−$451** | Revenue Share income $1,222/u net of TV/Internet/Phone expense $772/u = Kelton earns $451/u more here |
+| **− Taxes/insurance/mgmt** | **−$4** | ~wash; RE tax ~$1,150/u both (same county) |
+| Seasons Yr-1 NOI/unit | **$13,919** | |
+
+### Full line-item detail (Yr-1, $/unit)
+| Line | Kelton/u | Seasons/u | Δ to Seasons NOI/u |
+|---|---:|---:|---:|
+| Market Rent (GPR) | 17,579 | 17,674 | +95 |
+| (LTL)/GTL | 167 | −2 | −169 |
+| Vacancy | −1,065 | −1,060 | +4 |
+| Model Units | −74 | −40 | +34 |
+| Concessions | −621 | −265 | +356 |
+| Other Income (misc) | 664 | 2,338 | **+1,675** |
+| RUBS | 1,410 | 1,088 | −322 |
+| Parking | 417 | 942 | **+525** |
+| Revenue Share (media) | 1,222 | 0 | **−1,222** |
+| Payroll | 1,915 | 1,789 | +127 |
+| Advertising | 367 | 250 | +117 |
+| G&A | 450 | 327 | +123 |
+| Turnover | 200 | 150 | +50 |
+| R&M | 225 | 197 | +28 |
+| Contracts | 659 | 535 | +124 |
+| Utilities (incl ~$772 media exp) | 2,113 | 1,252 | +861 |
+| Management Fee | 490 | 515 | −24 |
+| Insurance | 527 | 500 | +27 |
+| Real Estate Taxes | 1,146 | 1,153 | −7 |
+| **NOI / unit** | **11,519** | **13,919** | **+2,400** |
+
+**Takeaways:**
+- The single biggest driver is **Seasons' ancillary/fee income** — `Other Income (misc)` of **$2,338/u vs Kelton's $664/u** (+$1,675), plus parking (+$525). That misc line is ~$1.03M/yr at Seasons; **verify it's normalized/sustainable** (fees, pet, storage, admin, MTM) — it's the largest single swing in the whole gap.
+- **Scale is real but second-order (+$658/u):** Kelton's fixed opex over 240 doors vs Seasons' 440.
+- **Kelton's "high utilities" is the media bundle** — netted against its Revenue Share income it's a **+$451/u NOI positive**, not a drag. Core utilities are ~equal.
+- **Taxes are a wash** (~$1,150/u both) — the per-door value gap is an income-and-multiple story, not a tax story.
