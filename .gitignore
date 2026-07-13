@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Temp / scratch
+*.tmp
+~$*.xlsx
+~$*.xls
+.~lock.*#
+
+# LibreOffice recalc leftovers
+.recalc/

@@ -1,0 +1,420 @@
+---
+name: rr-t12-processor
+description: "RR-T12 Processor — replicate and improve on RedIQ for multifamily underwriting intake — turn one or more raw operating statements (T12s/monthlies) and a rent roll into a standardized, EDITABLE chart of accounts plus a stitched multi-period operating history, one-lined rent roll, enhanced unit mix (new-lease + HelloData T90 market-rent indicators), lease-trend analysis, and a rent-roll-to-T12 reconciliation with AGPR tie-out — all paste-ready for the TMG model. Use whenever the user uploads T12s/operating statements and/or a rent roll and wants them standardized, categorized, stitched, one-lined, or reconciled (the work RedIQ does before underwriting). Trigger on: 'run RedIQ', 'replace RedIQ', 'standardize this T12', 'stitch these statements', 'categorize the operating statement', 'one-line the rent roll', 'unit mix', 'reconcile rent roll to T12', 'underwriting intake', or an uploaded Yardi/RealPage/Entrata statement + rent roll. Produces the intake workbook only; does NOT populate the model."
+---
+
+# RR-T12 Processor — Underwriting Intake
+
+Turn raw operating statements and a rent roll into the standardized, paste-ready inputs
+an analyst needs to start underwriting — the job RedIQ does, but with the full statement
+visible, **every line's category editable in one place**, the standardized OS Summary
+rolling up **live** as codes change, and **multiple statements stitched into one
+continuous operating history**.
+
+## Two modes (auto-detected)
+- **AUDIT mode** — triggered automatically when one of the uploaded statements is a **RedIQ
+  export** (an "Operating Statement" workbook with an `Overview` tab + a `Code / Category /
+  Line Item` detail tab). Instead of rebuilding the operating statement, the skill **audits
+  RedIQ's own categorization**: it re-reads every line independently and flags likely
+  miscodes (RedIQ ties at the subtotals, but a wrong line-code flows straight into the model).
+  Output = a **RedIQ Audit** exceptions report + **RedIQ Categorized** comparison, plus the
+  full rent-roll / HelloData / reconciliation analytics. **No live OS Summary and no mandatory
+  30s recalc → ~2s builds.** Use this when you already have RedIQ (fastest path; the common case).
+- **FULL-BUILDER mode** — the default when only **native** operator T12s (Yardi/RealPage/
+  Entrata) are uploaded and no RedIQ export is present. Builds the standardized OS from
+  scratch (this is the RedIQ *replacement* for teammates without a RedIQ seat).
+
+Both modes produce the Dashboard, unit mix, one-line rent roll, Lease Trend, HelloData and
+Reconciliation. The sections below describe FULL-BUILDER; the **Audit mode** section near the
+end covers what changes when a RedIQ export is detected.
+
+This skill is **self-contained** and covers **intake only**. The methodology it
+operationalizes — RedIQ code definitions, contract-rent = AGPR terminology, the
+market-rent data hierarchy, and expense-to-income netting — is documented in
+`references/account_mapping.md`; you do **not** need any other skill to run it.
+
+**Scope guardrails (read before asking for inputs):**
+- This skill works **only on the SUBJECT property** — its own operating statements, rent
+  roll, and (optionally) its own HelloData. It has **nothing to do with a competitive set
+  or submarket comps**. Do **not** request comp/competitor data, and do **not** invoke or
+  defer to a submarket-comp skill.
+- Any **HelloData** here is the **subject property's** "Unit Details" CSV, joined to the
+  subject's rent roll by unit number — never a competitive set.
+- It **stops at intake**: it produces the standardized workbook and the model paste
+  targets; it does **not** populate the underwriting model.
+
+## Required inputs
+
+1. **One or more T12s / monthly operating statements** (.xlsx or binary .xls) —
+   Yardi/RealPage/Entrata native exports. Upload **as many periods as you have**: years of
+   T12s, a couple of overlapping T12s, or a string of monthly statements. They are
+   **stitched into one continuous monthly series** over the union of all their months (see
+   *Stitching*). Prefer the **most detailed** versions (separate GL lines for concessions,
+   loss-to-lease, RUBS, payroll burden, insurance); a summary statement still reconciles
+   at EGR/Opex/NOI but flattens those sub-codes to zero for the months it owns.
+   Full GL / trial-balance exports are fine too: **non-operating sections** (Debt Service /
+   interest & principal, Depreciation & Amortization, Partnership/Owner, and grab-bag
+   "Adjustments" carrying distributions, contributions, loan & mortgage balances) are routed
+   to the non-op codes so they stay **out of NOI** — never operating G&A or vacancy.
+2. **Rent roll(s)** (.xlsx or binary .xls) — native export (Yardi/CBREI/RealPage/Entrata/
+   OneSite), as-of a recent month. Carries **move-in** and ideally **lease start** dates
+   (used to split new vs renewal — see *New vs renewal*); the parser auto-detects the column
+   layout (two-row headers, and both **charge-code sub-row** "block" rolls and **flat/wide**
+   rolls where each charge is its own column) and the unit-id format. OneSite-style rolls that
+   list an upcoming lease (Applicant / Pending renewal / Future) as a **second row** per unit
+   are collapsed to one row per physical unit, so unit counts and occupancy tie to the
+   operator's own totals.
+   You may pass **several rent rolls** (`--rr a.xlsx b.xlsx …`). The **newest** (by as-of date)
+   is primary — it alone drives the dashboard, unit mix, occupancy and lease-type reads. Each
+   roll gets its own **one-line tab** (dated), and **older rolls extend the Lease Trend's
+   new-lease history** back in time — they capture signings that have since turned over and so
+   are gone from the current roll.
+3. **HelloData "Unit Details" CSV** *(optional)* — supplies clean bed/bath, the **T90
+   executed** market-rent indicator per floor plan, and the monthly market-rent trend.
+   It is joined to the rent roll **by unit number**, so HelloData's marketing floor-plan
+   names need not match the rent roll's internal plan codes (the website names are also
+   shown on the unit mix). Also feeds the model's `HD Dump`.
+4. **Charge-code lookup** (.xlsx) *(optional, `--charge-codes`)* — for rent rolls that bill
+   by **numeric operator code** rather than a name (e.g. CBREI/Yardi). A sheet with
+   Account / Name / Type columns; the parser decodes each charge to its name so it
+   categorizes correctly. Not needed when the rent roll already names its charges.
+
+State which files you used and the operating period they cover.
+
+## What it produces
+
+One workbook, `<Property>__Underwriting_Intake.xlsx`, with up to **eight** tabs (the
+HelloData tab appears only when a HelloData CSV is provided):
+
+- **Dashboard** — snapshot (units, occupancy, SF, new/renewal counts), a **data-vintage**
+  line (rent-roll as-of + latest financial statement), the **true-market-rent indicators**
+  (HelloData asking/effective **T90** mix-weighted + new-lease contract T90), T12
+  EGR/Opex/NOI, **the unit mix** (see below — its "Market Rent" column is the rent roll's
+  asking figure and is *not* a market-rent signal), all auto-raised flags, and copy/paste
+  instructions.
+- **T12 Categorized** — the **entire** stitched statement set in **one clean section**:
+  an editable **Code** column (amber dropdown), Category via VLOOKUP, raw line item, **one
+  column per month across the union of all uploaded periods**, and a Total. Every distinct
+  GL line appears **once** (merged across statements), with each month sourced from the
+  freshest statement that owns it — so a SUMIFS by code reproduces the de-duplicated series
+  with **no double-counting**, and the months flow continuously left-to-right rather than
+  repeating per file. **This is the control surface** — change a code and everything
+  downstream updates.
+- **OS Summary** — the standardized chart of accounts, an exact clone of RedIQ's Overview
+  template (A1:Q77), covering the **most recent 12 months** (the model paste target).
+  Monthly cells are **live SUMIFS** over the `T12 Categorized` code column. The full
+  multi-period detail lives line-by-line on `T12 Categorized` and in summary on `Lease
+  Trend`, so there is no separate "operating history" tab to duplicate it.
+- **Rent Roll (One-Line)** — one row per unit. Core columns A–M match the model's `RR
+  Dump`; then, after **one blank spacer column**, a **per-unit charge-code block** split into
+  **three labeled, color-coded groups** so it is explicit what rolls into contract rent:
+  (1) **↓ IN Contractual Rent (scheduled $)** — green — base Rent + Amenity Rent, the charges
+  that sum to column I "Contractual Rent"; (2) **↓ Other recurring — Other Income, NOT contract
+  rent (scheduled $)** — parking, tech, valet trash, pet, MTM, etc.; (3) **↓ RUBS / utility
+  recoveries — ACTUAL $** — gold — surfaced from the **Actual Charges** column because RUBS is
+  billed in arrears off metered usage and has **$0 scheduled**, so it is invisible in a
+  scheduled-only view. The skill reads **scheduled** for recurring rent (proration-free) and
+  **actual** only for the RUBS-coded (RWS/RT/RF) recoveries that carry no scheduled value — one-
+  time actual noise (late/termination/referral fees) is deliberately excluded. The charge block
+  is reference detail, not a model paste target.
+- **Lease Trend** — a **monthly** (left-to-right) grid over the **full HelloData + new-lease
+  history** (back as far as the data goes; financials populate the overlap):
+  **market rent** (HelloData executed asking/effective per unit, mix-weighted; HD concession
+  %; executed counts; new-lease contract/unit), **occupancy & rent position** (economic
+  occupancy, AGPR contract/unit, and **loss-to-lease backed into as HD market − AGPR**),
+  **concessions** (T12 % of AGPR vs HelloData new-lease %, with the new-lease-vs-portfolio
+  dilution explained), the **operating trend** (monthly EGR/Opex/NOI + T12/T6/T3
+  annualizations — folded in from the old Trends tab), and the last-5 new leases / T90 by
+  floor plan.
+- **HelloData** *(if provided)* — CSV pass-through matching the model's `HD Dump`.
+- **Reconciliation** — rent-roll ↔ T12 control tie-outs including the **T1 AGPR** tie
+  (RR contract rent ↔ latest-month annualized AGPR) and the **amenity-rent verification**;
+  a charge-code map flagging which charges are **in contract rent**, plus a **"Charge → T12
+  Placement"** test that decides contract-rent membership *empirically* — matching each charge
+  to the T12 line it actually lands on (both sides, since RUBS recoveries are booked as
+  contra-expenses) and flagging disagreements with the categorization; a **"HelloData Market
+  Rent: Fee Netting"** disclosure (gross→net HD asking **and** effective, the HD-vs-base gap,
+  and the rent-roll candidate fees); **correlated
+  cross-checks** (parking spaces billed ↔ T12 parking income; utility expense ↔ RUBS/billback
+  income = **% recaptured**); an **NOI tie-out** that compares the standardized NOI to each
+  source statement's own reported "Net Operating Income" subtotal (Δ should be ~0 — the RUBS
+  gross-up nets to zero at NOI, so a gap means a line crossed the NOI boundary and is flagged);
+  and flags. (The RR-vs-T12 market-rent gap is shown as informational only — both are
+  seller-set asking and not a market-rent signal.)
+- **Codes** — the standardized code legend and the dropdown's source list.
+
+The **unit mix** (on the Dashboard, beside the snapshot) covers each floor plan: bed/bath,
+occ/vac, avg SF, avg market & contract rent, **new vs renewal counts**, the **last 5
+new-lease rents** and their average, and the HelloData executed market-rent reads —
+**T90 and T365 asking/effective** plus **HD90 year-over-year asking/effective** (trailing
+90 days vs the same window a year earlier). All portfolio totals are **mix-weighted** by
+unit count. New-lease rents and the HelloData executed reads are the market-rent signals
+underwriting actually trusts; renewals are excluded.
+
+## Execution
+
+### 1. Build the workbook
+
+```bash
+python3 <skill_dir>/scripts/build_intake.py \
+  --t12 "<statement1.xlsx>" ["<statement2.xlsx>" ...] \
+  --rr  "<RentRoll.xlsx>" ["<OlderRentRoll.xlsx>" ...] \
+  [--hd "<hello.csv>"] [--charge-codes "<lease_charge_codes.xlsx>"] [--hd-fee-offset <$/mo>] [--name "Property Name"] \
+  --out /home/claude/<Property>__Underwriting_Intake.xlsx
+```
+
+`--t12` accepts **any number** of statement files; pass them in any order (they are
+sorted and stitched by date). `scripts/` holds three self-contained modules:
+`account_map.py` (categorizer + chart of accounts), `intake_lib.py` (parsing, stitching,
+reconciliation, unit-mix, lease-trend — no Excel), and `build_intake.py` (the writer).
+Run from `scripts/` or add it to `sys.path`.
+
+### 2. Recalculate (MANDATORY — the standardized statements are all formulas)
+
+```bash
+python3 /mnt/skills/public/xlsx/scripts/recalc.py /home/claude/<Property>__Underwriting_Intake.xlsx 120
+```
+
+Expect `status: success`, `total_errors: 0`. The workbook ships with ~1,000–2,000+
+formulas (more with a long history); any `#REF!`/`#NAME?` means a tab reference broke —
+fix before delivering.
+
+**Audit mode: recalc is OPTIONAL and can be skipped.** When a RedIQ export was detected
+(status line `AUDIT_OK:` not `BUILD_OK:`), there is **no live OS Summary** — the only formulas
+are trivial within-sheet column SUMs, and every key figure (Dashboard EGR/OpEx/NOI, the audit
+tab, reconciliation) is written as a **static value**. Excel/Sheets compute the SUMs on open,
+so you can skip the 30s LibreOffice recalc entirely and deliver in ~2s. (Run it only if you
+want the total rows pre-cached for a programmatic check.)
+
+### 2b. Completeness gate — VERIFY BEFORE YOU DELIVER (non-negotiable)
+**Never hand the user a half-built workbook.** A build can "succeed" yet be empty if a
+T12 or rent-roll **layout wasn't recognized** (e.g. numeric `MM/YYYY` headers, fused
+`CODE:Name` accounts, a flat "Rent Roll Summary", bare `Type`/`Sq. Feet` columns). The
+build prints a status line you MUST read:
+- **`BUILD_OK: … NOI ties to operator.`** → proceed.
+- **`BUILD_INCOMPLETE: …`** (and a banner on stderr) → **DO NOT DELIVER.**
+- **`BUILD_OK_BUT_NOI_UNTIED: …`** → **STOP and investigate.** Standardized NOI must
+  reconcile to the operator's OWN reported NOI — re-bucketing lines (including the RUBS
+  gross-up) is **NOI-neutral**, so a gap is a **categorization/parse bug, never a
+  methodology choice.** Usual causes: a **parent/statistic row** (per-unit rent, occupancy
+  %) summed as a dollar leaf; a **sign error**; or a line that **crossed the NOI boundary**
+  (an operating line routed below NOI, or vice-versa). Fix it so NOI ties, then deliver.
+
+Before presenting the file, confirm ALL of these are non-empty/sane (open the workbook and
+check, don't assume):
+1. **Dashboard** — unit count > 0, a populated **UNIT MIX** table, occupancy %, total SF,
+   and **cached EGR / OpEx / NOI** (the Dashboard caches these, so they're the reliable
+   programmatic check — read them with openpyxl `data_only=True`).
+2. **T12 Categorized** — line items with codes and non-zero month values.
+3. **OS Summary** — the live SUMIFS code-formulas are present and well-formed. NOTE: the
+   LibreOffice recalc does **not** cache OS Summary's cross-sheet SUMIFS (they read blank
+   via openpyxl); they populate the instant the file opens in Excel/Sheets. So verify the
+   **formulas exist** and trust the **Dashboard's** cached EGR/OpEx/NOI for the numbers —
+   do NOT conclude "incomplete" just because openpyxl shows OS Summary blank.
+4. **Reconciliation** — the RR↔T12 ties populated; the **NOI Tie-Out** shows standardized
+   NOI **matching the operator's reported NOI** for each statement (a gap = a bug; see the
+   `BUILD_OK_BUT_NOI_UNTIED` note above). The AGPR line is gross potential (avg contract ×
+   ALL units × 12), not occupied-only.
+5. **HelloData fee check (do not skip).** If the Reconciliation flags an **HD-asking-above-base
+   gap**, you MUST evaluate it before delivering: check the property **website** (is it a
+   Greystar / "Total Monthly Leasing Price" or other all-in advertiser?) and compare the gap
+   to the rent-roll's **candidate flat fees**. If HD is carrying a bundle, re-run with
+   `--hd-fee-offset <$/mo>`. Don't ship HD gross without resolving the question. See
+   `references/hd_fee_detection.md` (Greystar bundles → net; Aura → don't).
+6. **Bed/bath spot-check.** Confirm the unit mix beds are sane (studios = 0, not mis-inferred
+   from an operator plan prefix like `bc_`); they should source from HelloData.
+
+If **anything** is empty or fails: **do not send the file.** Tell the user plainly **what
+is missing and what you need to finish it** (almost always: an unrecognized input layout to
+teach the parser, or a missing/expected input). Fix it (or ask), rebuild, re-verify — then
+deliver. A partial deliverable is worse than a clear "here's what I need."
+
+### 3. Review the categorization
+
+Open `T12 Categorized` and scan the **Code** column. The categorizer is a strong first
+pass (validated at ~96–100% vs RedIQ on the test deal); confirm the operator-specific,
+reliably contentious lines — see `references/account_mapping.md` (trash → `cont`,
+workers' comp → `Pay`, employee-apartment concession → `PBo`, month-to-month →
+`Rentinc`, **amenity rent → `Rentinc`** *only when it folds into Rental Income* — an amenity
+*fee* booked as Other Income is not contract rent; the Reconciliation "Charge → T12 Placement"
+test confirms which — insurance split from taxes, late fees → `OI`). Re-map by picking a new
+code from the dropdown; Category and the OS Summary re-roll automatically.
+
+### 4. Check the reconciliation
+
+On `Reconciliation`, confirm **Contract Rent** ties between the rent roll and the T12's
+latest month and review the **T1 AGPR** tie-out — contract rent / AGPR is the number that
+"cannot be bullshitted," so that is the tie that matters. The **Gross Market Rent (asking)**
+line is informational only: both the RR Market column and the T12 GPR are seller-set asking
+rents, *not* a market-rent signal, so a gap there is expected and is **not** flagged — read
+true market rent from the unit mix (new-lease + HelloData executed) and Lease Trend tabs.
+Then read the charge-code map — especially any RUBS/valet-trash recovery that could net
+against an expense or book as Other Income. Resolve the flags before underwriting.
+
+### Confirm ambiguous categorizations (ASK the user — do not silently guess)
+Some GL lines cannot be placed with confidence — an **amenity/CAM fee** (Other Income vs a
+resident recovery), a generic **"miscellaneous / other"** line, a **non-utility
+"reimbursement"**, or an **"adjustment"**. The build surfaces material ones (≥ $25k/yr) on
+the Reconciliation **"⚑ Flags for Underwriting"** as **`CONFIRM categorization: …`** items,
+showing the line, its $/yr, and the code the skill guessed. When any of these appear, **stop
+and ASK the user** what each line actually is (e.g., "is this CAM line a resident cost
+recovery or just other income?") and apply their answer to the Code column **before** treating
+the intake as final — rather than trusting the guess. A quick way to resolve them is to check
+the **property website** (e.g., a mandatory "amenity fee" on the cost-estimate widget). Only
+the genuinely ambiguous, material lines are flagged this way; the rest categorize deterministically.
+
+The **"Charge → T12 Placement (empirical contract-rent test)"** section settles *what is in
+contract rent* by evidence, not by charge name: each rent-roll charge is matched (by monthly
+$, and name where the code is mnemonic) to the T12 line it actually lands on — searching
+**both sides** of the T12, since RUBS recoveries (valet trash, water/sewer rebill, reimbursed
+pest) are booked as **contra-expenses**, not revenue. A charge is called contract rent only
+if it ties into a Rental Income line; if it ties to Other Income or a rebill it is not. The
+match **overrides** the name categorization only on strong evidence (a tight $ tie, or a
+decent tie corroborated by the line name) — a coincidental same-magnitude match cannot flip a
+charge, and a charge folded into Rental Income with no distinct T12 line (e.g. amenity *rent*)
+correctly stays contract. Disagreements between the evidence and the categorization are
+flagged in red for review of the Code column. (This is why, at Aura, the $10 **amenity fee**
+is *not* contract rent — it ties to the T12 "Amenities Income" line in Other Income — while
+Canyon Ridge's **amenity rent** is, since it folds into Rental Income.) The **"Contract Rent"**
+tie-out label adapts: it reads "incl. amenity rent" only when amenity rent actually rolls into
+contract rent.
+
+### 5. Hand off to the model
+
+Use the paste targets in `references/model_paste_targets.md`. In short: `OS Summary`
+A1:Q77 → `OS Summary Dump` (Paste **Values**, most recent 12 months); `T12 Categorized`
+Code/Category/Line Item + the most recent 12 month columns → `T12 Dump`; `Rent Roll
+(One-Line)` core columns A2:M → `RR Dump` (the per-unit charge-code block to the right of
+the spacer is reference detail, not a paste target); `HelloData` A2:U → `HD Dump`. **Do
+not** populate the model's underwriting tabs — these dumps are the only paste targets.
+
+## Stitching (multiple statements → one continuous history)
+
+- The union of every statement's months becomes the timeline. Each month is **owned** by
+  the **freshest extract** that contains it (latest window-end, then most detailed), so
+  later books supersede earlier ones and **each (code, month) is counted exactly once**.
+- The `T12 Categorized` tab is built by **merging** every statement's GL lines into one
+  ordered set (each distinct line once) and sourcing each month's value from that month's
+  owner; non-owned months are simply blank. The live SUMIFS therefore reproduces the
+  resolved series while the tab reads as one clean statement with months flowing across.
+  Validated: on the test deal a 14-month stitch of two T12s rolls up to the standalone
+  trailing-12 T12 to the dollar, and a SUMIFS by code over the merged tab equals the
+  resolved union across all months and codes exactly.
+- **Flags** are raised automatically: overlapping months that **disagree** between
+  statements (restated financials) and months sourced from a **summary-level** statement
+  (sub-line detail not itemized → reads as 0 in those codes).
+
+## New vs renewal & true market rent
+
+- **New lease** = lease start **on/equal to** move-in (the first lease on the unit);
+  **renewal** = move-in is **older than** lease start (the resident moved in earlier and
+  re-signed). Renewals are never market-tested, so only **new** leases inform market rent.
+  When the rent roll carries **move-in but no lease start**, a move-in within **~12 months**
+  of the as-of date is treated as a **new** lease (still on its original lease); an older
+  move-in implies a **likely renewal** and is excluded from the new-lease reads. With only a
+  lease-start (no move-in), or neither, the lease is left **unknown**.
+- **HelloData ↔ rent roll join + bundled-fee netting.** HelloData is matched to the rent
+  roll **by unit number**, so HD's marketing floor-plan names (e.g. *Barnsley*, *Phoenix*)
+  resolve to the rent roll's internal plan codes; the website names are shown on the unit
+  mix. HelloData reflects the **price the property website advertises**. **Usually that is the
+  base asking rent** — but some operators advertise **all-in pricing** (base + mandatory flat
+  fees like pest, amenity, valet trash, tech) as the headline number, and HD then captures the
+  inflated figure. **It is operator-dependent — do not assume either way.** **Policy: gross +
+  flag + confirm.** The skill shows HD **gross**, never auto-applies a fee (the truth lives on
+  the website, which this data can't see, and inference is unreliable — see
+  `references/hd_fee_detection.md`), **flags** when HD asking sits materially above the
+  new-lease base rent (could be bundled fees *or* ordinary market premium), and nets a fee
+  **only** when **`--hd-fee-offset <$/mo>`** supplies a confirmed amount. The **Reconciliation
+  tab → "HelloData Market Rent: Fee Netting"** section discloses the full derivation (gross HD
+  T90 asking AND effective, base, gap, fee netted + source, net asking + net effective,
+  candidates). The fee is removed from **both asking and effective** (and from T365 + the YoY
+  reads) — anywhere HD market rent is shown — not just asking. **YoY note:** the HD90 YoY
+  columns are computed on the **net-of-fee** rents (both the current and the year-ago figure),
+  so the fee offset slightly shifts the growth rate (~0.1%). This is deliberate — it measures
+  true rent growth with the constant fee stripped from both periods; it is *not* a $-for-$
+  subtraction from the percentage.
+  **When the gap is flagged, CONFIRM before netting** — ideally by checking a *currently-listed*
+  unit on the property website: compare HD's asking for that unit to the website's base rent vs
+  "Total Monthly." If HD ties to the base, it's **not** bundling fees (don't net); if HD ties to
+  the all-in total, net the difference via `--hd-fee-offset`. Don't guess — the gap is often
+  just market premium. **Worked example (Aura Beacon Island):** the website itemizes a $15
+  bundle (pest $5 + amenity $10) into its Total Monthly, *but* HD's asking for unit 5104 came
+  through at **$1,605 = the base rent** (not the $1,620 total) — so HD was **not** carrying the
+  fee and **no netting was correct**. The lesson: a website that bundles does **not** guarantee
+  HD picked the bundle up — verify a unit before netting.
+- The **last 5 new-lease contract rents** per floor plan (in the Dashboard unit mix) and
+  **HelloData executed** rents — **T90/T365 asking & effective**, plus **HD90 YoY** — are
+  the preferred market-rent reads; cross-check them against each other. The T12 market-rent
+  line is unreliable — do not use it.
+- On a lease-up, total-revenue YoY reflects the occupancy ramp, not rent growth — read
+  market-rent movement from the **Lease Trend** tab (per-unit, mix-weighted), not the
+  operating series.
+
+## Critical lessons
+
+- **Contract rent = AGPR, never "in-place rent."** Contract rent = base Rent + **amenity
+  rent** *where amenity rent folds into Rental Income* — i.e. it appears nowhere else on the
+  T12, so including it ties the rent roll's contract rent tighter to the latest-month AGPR.
+  But **do not assume every "amenity" line is contract rent**: an amenity *fee* booked as
+  **Other Income** (e.g. Aura's $10/mo, which ties to the T12 "Amenities Income" line) is
+  **not** contract rent. Let the Reconciliation **"Charge → T12 Placement"** test decide by
+  where the charge actually lands on the T12, not the charge name.
+- **Faithfully surface, don't normalize.** Raw statements carry GL noise (one-off vacancy
+  or concession reclasses, lease-up ramps). Report it on Lease Trend / flags; let the analyst
+  normalize in the model.
+- **Detailed beats summary; recent owns overlaps.** A summary statement ties at subtotals
+  but flattens `ltl`/`conc`/`RF`/`park` to zero for the months it owns. The freshest
+  statement wins overlapping months.
+- **The categorizer is a first pass, not gospel.** The editable code column + live rollup
+  is the deliverable — match RedIQ where unambiguous to minimize edits; the user owns the
+  judgment calls.
+- **Reimbursement lines booked on the expense side flip sign.** Utility rebill / reimbursement
+  lines that an operator parks in the expense section (a recovery booked as a negative
+  contra-expense, or a rebilling service-fee cost booked positive) are reclassified to the RUBS
+  revenue codes (RWS/RT/RF) and their sign is **negated** so they read as income — matching how
+  RedIQ presents them, and keeping EGR/NOI correct. This **grosses up** RUBS: EGR and OpEx each
+  rise by the recovery amount vs an operator statement that nets reimbursements inside expenses,
+  but **NOI is unchanged** — which is why the standardized NOI still ties to the operator's own
+  reported NOI line (see the Reconciliation tab's NOI tie-out).
+- **Recalc is non-negotiable** — the standardized statements are formulas, so an
+  un-recalced file shows zeros until opened.
+
+## Audit mode (RedIQ error-check) — details
+
+When any uploaded statement is a **RedIQ export**, the driver auto-enters audit mode
+(`is_rediq_export()` detects the `Overview` + `Code/Category/Line Item` structure). Pass the
+RedIQ export as a `--t12` argument like any statement; if you *also* pass the native operator
+T12, it is used only to **cross-tie NOI** (RedIQ NOI vs the operator's own T12).
+
+What changes vs full-builder:
+- **No `T12 Categorized` / `OS Summary`.** Instead:
+  - **RedIQ Audit** — the exceptions report. Each flagged line shows RedIQ's code, our
+    independent suggestion, the $/yr, the NOI effect, and why. Ranked **HIGH → MED → LOW**:
+    - **HIGH** = a side flip (revenue↔expense, e.g. a resident rebill RedIQ booked as a cost,
+      or a **net-negative expense** that is really income) or an operating↔non-operating move.
+      These change EGR/OpEx and the ratios even when NOI-neutral.
+    - **MED** = a within-side reclass on a known-contentious line (tax-consultant→GA,
+      lease-up→adv, workers-comp→Pay, month-to-month, trash, amenity…).
+    - **LOW** = other judgment-call reclasses (internet GA/UC, minor R&M splits).
+    Sub-$500/yr lines and immaterial same-side judgment calls (<$2,500) are suppressed.
+  - **RedIQ Categorized** — every GL line with RedIQ's code beside our read and a ⚑ on the
+    flagged ones (static values; the full detail, not just exceptions).
+- The RedIQ export's own **EGR/OpEx/NOI tie to its Overview by construction** (the RUBS
+  recovery codes RWS/RT/RF are stored as negative contra-expenses in the detail tab and are
+  sign-flipped up to revenue, matching the Overview gross-up).
+- **Recalc optional** (see step 2) — audit builds are ~2s.
+- Status line is **`AUDIT_OK: N exceptions (h/m/l) …`** instead of `BUILD_OK`.
+
+**The audit is a first-pass, not gospel** — our categorizer can be wrong too. Read HIGH/MED
+first (those move real dollars/ratios); treat LOW as informational. A clean deal legitimately
+returns **0 exceptions** (it means RedIQ agrees with our independent read on every material
+line). When you present it, lead with the HIGH/MED findings and the one-line "these are the
+codes to fix in your model."
+
+## Output expectations
+
+A clean-recalced `.xlsx` (0 errors) in the workspace with the model paste ranges ready
+and the flags/reconciliation reviewed. Present it with `present_files` and a short
+summary of the operating period stitched, what tied, the market-rent indicators, and any
+open flags. **Audit mode:** present the RedIQ Audit exceptions (HIGH/MED first) and skip the
+recalc note — lead with what to fix in the model.

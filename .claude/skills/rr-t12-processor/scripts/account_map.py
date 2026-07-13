@@ -1,0 +1,513 @@
+"""
+account_map.py
+==============
+The categorization "brain" for the RedIQ-replacement intake engine.
+
+Jobs:
+  1. Define the canonical standardized chart of accounts (the OS Summary rows, in
+     order, with section + sign). Mirrors RedIQ's "Overview" sheet and the TMG
+     model's 'OS Summary Dump' tab exactly.
+  2. Auto-categorize each raw T12 line item to a standardized code, and each raw
+     rent-roll charge code to a standardized code.
+
+CATEGORIZATION STRATEGY (why it's built this way):
+  RedIQ -- and good analysts -- largely RESPECT the operator's own statement
+  structure. A line sitting in the "General & Administrative" section is almost
+  always G&A, even if its name ("Courtesy Patrol") might keyword-match Contract.
+  So the categorizer is SECTION-AWARE: the native T12 subsection (passed by the
+  parser as `section_hint`) picks the CODE FAMILY, then keywords REFINE within the
+  family. When no section is known (other PM systems, odd layouts) it falls back to
+  pure keyword rules. A short list of cross-section OVERRIDES handles the handful of
+  lines operators reliably misfile (e.g. forced-placed insurance -> G&A).
+
+  Auto-categorization is only a FIRST PASS. The intake workbook's Code column is
+  editable and OS Summary re-rolls-up via SUMIFS, so the goal is "mostly right and
+  never crashes," not perfection. Unknowns fall back to OI (revenue) / GA (expense)
+  and are flagged for human review.
+"""
+
+import re
+
+# ---------------------------------------------------------------------------
+# 1. CANONICAL STANDARDIZED CHART OF ACCOUNTS (order/labels = OS Summary template)
+# ---------------------------------------------------------------------------
+REVENUE_CODES = [
+    ("Rentinc", "Rental Income"),
+    ("OI",      "Other Income"),
+    ("RWS",     "Rubs Water / Sewage"),
+    ("RT",      "Rubs Trash"),
+    ("RF",      "Rubs Fees"),
+    ("park",    "Garage / Parking"),
+    ("CI",      "Corporate Income"),
+    ("cable",   "Cable Income"),
+    ("ltl",     "(Loss to Lease) / Gain to Lease"),
+    ("vac",     "Vacancy"),
+    ("cl",      "Collection Loss / Bad Debt"),
+    ("nr",      "Non-Revenue Units"),
+    ("conc",    "Concessions"),
+]
+EXPENSE_CODES = [
+    ("Pay",         "Payroll"),
+    ("PB",          "Payroll Burden"),
+    ("PBo",         "Payroll Bonuses"),
+    ("adv",         "Marketing / Advertising"),
+    ("GA",          "General & Administrative"),
+    ("turn",        "Turnover"),
+    ("inter/exte",  "R&M Interior / Exterior"),
+    ("cont",        "Contract"),
+    ("Safe",        "Life Safety / Elevators"),
+    ("HAF",         "Homeowners Association Fees"),
+    ("UT",          "Utilities Trash"),
+    ("UWS",         "Utilities Water Sewer"),
+    ("UC",          "Utilities Common"),
+    ("UF",          "Utilities Fees"),
+    ("mgt",         "Property Management Fee"),
+    ("ins",         "Insurance"),
+    ("ret",         "Real Estate Taxes"),
+    ("NI",          "Not Included"),
+    ("site",        "R&M Site"),
+]
+NONOP_REV_CODES = [("dispro", "Disposition Proceeds")]
+NONOP_EXP_CODES = [
+    ("rd","Replacement Reserve Deposits"),("capx","Capital Improvements"),
+    ("aex","Appliance Expenditures"),("ece","Extraordinary Capital Expenditure"),
+    ("tird","TI&LC Reserve Deposits"),("tirw","TI&LC Reserve Withdrawls"),
+    ("tiae","TI&LC Actual Expenditures"),("intex","Interest"),("prin","Principal"),
+    ("draw","Loan Draws"),("repay","Loan Repayments"),("othdf","Other Debt Fees"),
+    ("ord","Other Reserves Funded / Used / Released"),
+    ("icd","Investor Contributions and Distributions"),
+    ("scd","Sponsor Contributions and Distributions"),("entex","Entity Expenses"),
+    ("pfex","Partnership Fees and Expenses"),("purch","Purchase Price"),
+    ("acqex","Acquisition Expenses"),("disex","Disposition Expenses"),
+    ("depex","Depreciation"),("onoe","Other Non-Operating Expense"),
+]
+CODE_TO_CATEGORY = {c: l for c, l in
+                    REVENUE_CODES + EXPENSE_CODES + NONOP_REV_CODES + NONOP_EXP_CODES}
+CODE_SECTION = {}
+for c, l in REVENUE_CODES:   CODE_SECTION[c] = "rev"
+for c, l in EXPENSE_CODES:   CODE_SECTION[c] = "opex"
+for c, l in NONOP_REV_CODES: CODE_SECTION[c] = "nonop-rev"
+for c, l in NONOP_EXP_CODES: CODE_SECTION[c] = "nonop-exp"
+NEGATIVE_REVENUE_CODES = {"ltl", "vac", "conc", "cl", "nr"}
+REVENUE_CODE_SET = {c for c, _ in REVENUE_CODES}
+ALL_CODES = list(CODE_TO_CATEGORY.keys())
+
+
+# ---------------------------------------------------------------------------
+# 2. NATIVE SECTION  ->  CODE FAMILY
+#    `section_hint` is the operator's own subsection label (the parser tracks it).
+#    We normalize loosely so it works across Yardi/RealPage/Entrata naming.
+# ---------------------------------------------------------------------------
+def _family_from_section(section_hint):
+    s = (section_hint or "").strip().lower()
+    if not s:
+        return None
+    # Hierarchical T12s use a parent GL line as the section header
+    # ("54005-000 - Ad Performance Fees"); strip the leading account number so the
+    # family keywords below see the real label.
+    s = re.sub(r"^\s*\d{3,}[-_]\d+\s*[-–—:]+\s*", "", s)
+    # NON-OPERATING sections first: debt service, depreciation/amortization, and the
+    # partnership/owner/non-operating buckets. RedIQ excludes these from NOI, so they
+    # must land in the non-op codes (intex/prin/depex/icd/onoe), never operating G&A.
+    if re.search(r"debt service|financing", s):                                   return "nonop"
+    if re.search(r"depreciation|amortization", s):                                return "nonop"
+    if re.search(r"routine replacement|replacement reserve|replacement expense|"
+                 r"capital (expenditure|improvement|reserve)", s):                return "nonop"
+    if re.search(r"non.?operating|partnership|owner (expense|draw|distribution)|"
+                 r"owner['’]s", s):                                               return "nonop"
+    if re.search(r"payroll|personnel|salaries|compensation|labor", s):           return "payroll"
+    if re.search(r"advertis|marketing|ad performance|property website|online presence|"
+                 r"search engine|internet listing|\bils\b|locator|leasing.*marketing", s): return "marketing"
+    if re.search(r"general.*admin|administ|g\s*&\s*a|g/a|office", s):             return "admin"
+    if re.search(r"utilit", s):                                                   return "utilities"
+    if re.search(r"make[\s\-/]*ready|redecorat|turn[\s\-]?over|\bturnover\b|unit turn", s): return "makeready"
+    # "Recreational Amenities" / grounds-upkeep sections are physical R&M (pool, fitness,
+    # rec areas) -> maintenance family, so they split to inter/exte rather than falling to
+    # the G&A catch-all. RedIQ files amenity upkeep in R&M; seen on Tacara & Alta.
+    if re.search(r"maintenance|repairs|r\s*&\s*m|recreational amenit|grounds", s): return "maintenance"
+    if re.search(r"manage?ment fee|mgmt fee|manage?ment$", s):                     return "mgmt"
+    if re.search(r"tax|insurance", s):                                            return "taxins"
+    if re.search(r"contract", s):                                                 return "contract"
+    if re.search(r"other income|other revenue|misc.*income|ancillary", s):       return "otherinc"
+    if re.search(r"utility billback|rubs|reimburs|recover", s):                   return "rubs"
+    if re.search(r"concession", s):                                               return "concession"
+    if re.search(r"rental adjustment|adjustments|vacancy|loss", s):              return "rentadj"
+    if re.search(r"gross potential|potential rent|gross rent|rental (income|revenue)|scheduled rent", s): return "rent"
+    if re.search(r"write.?off", s):                                               return "writeoff"
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 3. WITHIN-FAMILY SPLITTERS (keyword refinement once the family is known)
+# ---------------------------------------------------------------------------
+def _split_payroll(n):
+    # Payroll *processing* fees (ADP/Paychex/service charge) are an admin cost, not wages.
+    if re.search(r"processing fee|payroll service|payroll fee|\badp\b|paychex", n):  return "GA"
+    # Employee apartment concession / housing allowance = value of a free/discounted
+    # employee unit. RedIQ books this as a payroll bonus (PBo), not base payroll.
+    if re.search(r"concession|apartment allowance|employee (apartment|unit|housing)|"
+                 r"housing allowance", n):                                       return "PBo"
+    if re.search(r"bonus|commission|incentive", n):                              return "PBo"
+    if re.search(r"fica|payroll tax|medicare|social security|health|401|benefit|"
+                 r"insurance|unemploy|sui|futa|suta|burden|pension|retirement", n): return "PB"
+    return "Pay"  # salaries, wages, manager/leasing/maintenance, workers comp -> Pay (RedIQ convention)
+
+def _split_utilities(n):
+    if re.search(r"trash|garbage|refuse|waste|valet", n):                        return "cont"  # operator-specific; RedIQ files trash hauling in Contract
+    if re.search(r"water|sewer", n):                                             return "UWS"
+    if re.search(r"billing|transfer|audit|util.*fee|admin fee", n):              return "UF"
+    if re.search(r"electric|gas|common|vacant|cable|energy|power", n):           return "UC"
+    return "UC"
+
+def _split_makeready(n):
+    # Make-ready / redecorating section: unit-turn work by default. Only carve out the
+    # handful of recurring vendor-contract lines an operator may park here.
+    if re.search(r"landscap|pest|extermin|elevator|security|courtesy|pool service|"
+                 r"valet|trash haul|monitor|\bfire\b", n):                       return "cont"
+    return "turn"
+
+def _split_maintenance(n):
+    # Paint *supplies/materials* is general R&M (interior) UNLESS the line is explicitly a
+    # turnover/make-ready item. RedIQ splits a bare "Painting Supplies" -> R&M but keeps
+    # "Turnover - Painting Supplies" -> turn. Validated on Alta Berry Creek (R&M) and Canyon
+    # Ridge (turn). Carve the non-turnover supplies out before the turn check below.
+    if (re.search(r"paint", n) and re.search(r"suppl|material", n)
+            and not re.search(r"turn|make.?ready|redecorat", n)):                return "inter/exte"
+    # turnover: make-ready / unit turn work
+    if re.search(r"turn|make.?ready|carpet clean|paint|interior repairs?.*unit|"
+                 r"unit clean|vinyl|resurfac|key|lock", n):                      return "turn"
+    # contract services (recurring vendor contracts)
+    if re.search(r"landscap|pest|extermin|snow|elevator|fire alarm|fire suppl|fire.?/?life|"
+                 r"life safety|sprinkler|courtesy patrol|security|contract clean|package|"
+                 r"valet|trash haul|fitness|pool service|monitor", n):           return "cont"
+    # everything else physical R&M -> interior/exterior
+    return "inter/exte"
+
+def _split_taxins(n):
+    # Tax CONSULTANT / protest / appeal / advisory / rendering / valuation fees are
+    # professional services (G&A), NOT the ad valorem tax itself. Leaving them in `ret`
+    # overstates in-place real estate taxes — the line every underwriter scrutinizes for
+    # reassessment. RedIQ files them in GA; validated on Tacara at Weiss Ranch ($23,973).
+    if re.search(r"tax", n) and re.search(r"consult|protest|appeal|advisor|"
+                 r"abatement|render|valuation|agent fee", n):                    return "GA"
+    if re.search(r"insurance", n):                                               return "ins"
+    if re.search(r"tax", n):                                                     return "ret"
+    return "ret"
+
+def _split_otherinc(n):
+    # Month-to-month / short-term-lease premiums are a rent premium; RedIQ pulls
+    # these up into Rental Income rather than leaving them in Other Income.
+    if re.search(r"month.?to.?month|short.?term lease|\bmtm\b.*(fee|premium|rent)|"
+                 r"(fee|premium).*\bmtm\b", n):                                   return "Rentinc"
+    if re.search(r"parking|carport|garage|storage", n):                          return "park"
+    if re.search(r"water.*reimb|sewer.*reimb|rubs.*water|water.*billback", n):    return "RWS"
+    if re.search(r"trash.*reimb|rubs.*trash|trash.*billback|valet.*trash|trash.*income", n): return "RT"
+    if re.search(r"utility reimburs|util.*billback|rubs|electric.*reimb|gas.*reimb|"
+                 r"utility management|vacant recovery|corporate utilit", n):      return "RF"
+    if re.search(r"cable|revenue shar|internet income|bulk.*income", n):         return "cable"
+    if re.search(r"corporate (apartment|housing|unit) income", n):               return "CI"
+    return "OI"
+
+def _split_rubs(n):
+    if re.search(r"water|sewer", n):                                             return "RWS"
+    if re.search(r"trash|garbage|refuse", n):                                    return "RT"
+    if re.search(r"electric|\bgas\b|\butilit|util\.|pest", n):                    return "RF"
+    # A "Reimbursement Income" section also collects non-utility ancillary fees —
+    # package delivery, credit builder, deposit alternative, cable/internet income,
+    # CAM/amenity fees, renters-insurance reimbursement. Those are Other Income (or
+    # cable), NOT a RUBS utility recovery, so defer to the other-income splitter.
+    return _split_otherinc(n)
+
+def _split_contract(n):
+    # Bulk resident cable/internet delivered property-wide is a utility cost (UC),
+    # not a service contract (operator/RedIQ convention).
+    if re.search(r"cable|internet", n):                                          return "UC"
+    # Office / technology / admin service contracts -> G&A (RedIQ convention);
+    # physical property-operations contracts (cleaning, landscaping, pest, pool,
+    # security patrol, valet, elevator) stay Contract.
+    if re.search(r"\bsaas\b|software|web ?site|copier|answering service|key.?track|"
+                 r"access control|fire protection monitor|fire monitor|emergency phone|"
+                 r"office tele|telecomm|furniture|equipment rental|legal liability|"
+                 r"renters legal", n):                                           return "GA"
+    return "cont"
+
+def _split_rentadj(n):
+    if re.search(r"non.?revenue|down unit|model unit|employee unit|office unit|"
+                 r"admin unit|staff unit|mgr unit|manager unit", n):             return "nr"
+    if re.search(r"vacanc", n):                                                  return "vac"
+    if re.search(r"concession|free rent|chargeback", n):                         return "conc"
+    if re.search(r"loss to lease|gain to lease|loss/gain|gain/loss|market loss|market gain", n): return "ltl"
+    if re.search(r"bad debt|collection|write.?off|uncollect|skip", n):           return "cl"
+    # Some operators dump a whole trial-balance into a generic "Adjustments" grab-bag:
+    # capital / major repairs, balance-sheet accounts, financing & equity flows. RedIQ
+    # excludes all of these from the operating statement, so route them BELOW NOI rather
+    # than letting them masquerade as vacancy and distort EGR.
+    #   capital / major repairs / renovations -> Capital Improvements
+    if re.search(r"major repair|maj\.? *repair|renovation|capital|appliance|water heater|"
+                 r"\bhvac\b|\broof|carpet|floor|tile|building|mini ?blind|drape|signage|"
+                 r"vehicle|software|plumbing|electrical|termite|fire ?& ?life|fire and life", n): return "capx"
+    #   balance-sheet / accrual / escrow / payable-receivable accounts -> excluded (non-op)
+    if re.search(r"escrow|receivable|payable|prepaid|accrued|deposit|doubtful|"
+                 r"unclaimed|intra.?company|allowance|sales tax", n):             return "onoe"
+    #   financing / equity / depreciation (interest, principal, distributions, loans...)
+    nop = _split_nonop(n, default=None)
+    if nop:                                                                       return nop
+    # an unrecognized line in an "adjustments" grab-bag is almost never true vacancy;
+    # exclude it from NOI (and flag for review) rather than silently book it as vacancy.
+    return "onoe"
+
+def _split_nonop(n, default="onoe"):
+    if re.search(r"interest", n):                                                return "intex"
+    if re.search(r"principal|amortiz", n):                                       return "prin"
+    if re.search(r"depreciat", n):                                               return "depex"
+    if re.search(r"distribution|owner draw", n):                                 return "icd"
+    if re.search(r"capital call|capital contribution|owner contribution|"
+                 r"partner contribution|equity contribution|^contributions?$", n): return "icd"
+    if re.search(r"loan (cost|fee)|financ.*fee|debt fee|origination", n):        return "othdf"
+    if re.search(r"loan draw|draw on loan", n):                                  return "draw"
+    if re.search(r"loan (repay|payoff)|repayment", n):                           return "repay"
+    if re.search(r"mortgage|note payable|loan payable|notes? payable", n):       return "onoe"
+    if re.search(r"reserve", n):                                                 return "rd"
+    return default
+
+def _split_rent(n):
+    if re.search(r"loss to lease|gain to lease|loss/gain|gain/loss|loss to old lease|market loss|market gain", n): return "ltl"
+    return "Rentinc"
+
+
+# ---------------------------------------------------------------------------
+# 4. PURE-KEYWORD FALLBACK (used when section is unknown)
+# ---------------------------------------------------------------------------
+REVENUE_RULES = [
+    (r"loss to lease|gain to lease|loss/gain|gain/loss|market loss|market gain|loss to old lease", "ltl"),
+    (r"non.?revenue|down unit|model unit|employee unit|office unit|admin unit|staff unit", "nr"),
+    (r"vacanc", "vac"),
+    (r"concession|free rent|chargeback concession", "conc"),
+    (r"bad debt|collection loss|write.?off.*rent|rent.*write.?off|collected write|skip|uncollect", "cl"),
+    (r"gross market rent|market rent|gross mkt|mkt rent|gross potential|potential rent|"
+     r"gross rent|rental income|scheduled rent|base rent|^rent$", "Rentinc"),
+    (r"month.?to.?month|mtm|short.?term lease|stl fee", "Rentinc"),
+    (r"water.*reimb|sewer.*reimb|rubs.*water|water.*billback|sewer.*billback", "RWS"),
+    (r"trash.*reimb|rubs.*trash|trash.*billback|valet.*trash|trash.*recovery|trash.*income", "RT"),
+    (r"utility reimburs|utility recover|rubs|util.*billback|electric.*billback|gas.*billback|"
+     r"utility management|vacant recovery|corporate utilit", "RF"),
+    (r"parking|carport|garage|storage", "park"),
+    (r"cable|revenue shar|bulk internet income|internet income", "cable"),
+    (r"corporate (apartment|housing|unit) income", "CI"),
+    (r".*", "OI"),
+]
+EXPENSE_RULES = [
+    (r"bonus|commission|incentive", "PBo"),
+    (r"fica|payroll tax|medicare|health|401|benefit|workers? comp|work comp|unemploy|sui|futa|burden", "PB"),
+    (r"salary|salaries|wage|payroll|overtime|\bo\.?t\b|manager|leasing agent|maintenance (supervisor|technician|tech)|courtesy officer", "Pay"),
+    (r"advertis|marketing|signage|brochure|locator|ils|promotion|referral|resident retention|"
+     r"resident event|reputation|website|seo|model expense", "adv"),
+    (r"management fee|mgmt fee|asset management fee", "mgt"),
+    (r"make.?ready|carpet clean|paint(ing)? suppl|interior repairs?.*unit|unit clean|vinyl|resurfac|turn", "turn"),
+    (r"water.?/?sewer|water and sewer|^water$|sewer", "UWS"),
+    (r"utilit.*trash|trash.*utilit", "UT"),
+    (r"utility billing|utility transfer|utility audit|billing fee", "UF"),
+    (r"electric|gas|vacant unit utilit|common area electric", "UC"),
+    (r"landscap|pest|extermin|courtesy patrol|security|alarm monitor|contract clean|snow removal|"
+     r"pool service|fitness|package (service|locker)|valet|elevator|fire alarm|fire suppl|trash removal|trash haul", "cont"),
+    (r"life safety", "Safe"),
+    (r"hoa|homeowner|association fee", "HAF"),
+    (r"repair|maintenance|hvac|plumb|electrical|appliance|window|door|screen|flooring|equipment|"
+     r"hardware|lighting|key|lock|pool|spa|fountain|janitor|tools|building", "inter/exte"),
+    (r"insurance", "ins"),
+    (r"tax\s+(consult|protest|appeal|advis|abatement|render|valuation|agent)", "GA"),
+    (r"real estate tax|property tax|^tax|re tax|ad valorem|special assessment", "ret"),
+    # non-operating items that sometimes appear without a clear section header
+    (r"\binterest\b", "intex"),
+    (r"depreciat|amortiz", "depex"),
+    (r".*", "GA"),
+]
+def _match(name, rules):
+    low = (name or "").strip().lower()
+    for pat, code in rules:
+        if re.search(pat, low):
+            return code
+    return rules[-1][1]
+
+
+# ---------------------------------------------------------------------------
+# 5. CROSS-SECTION OVERRIDES (operators reliably misfile these)
+# ---------------------------------------------------------------------------
+def _override(name):
+    n = (name or "").strip().lower()
+    # Utility "Rebill" / "Reimbursed" lines are RUBS recovery REVENUE regardless of which
+    # side of the statement the operator parks them on (some book them in the expense
+    # section). Resolve them up front so they don't read as a utility expense. BUT the
+    # billing-PROGRAM cost the property pays to run RUBS — a "rebill service" or "billing
+    # fee" line (e.g. "Utility Rebill Services", "Utility Rebill Service Fees") — is a
+    # genuine utility EXPENSE, not a resident recovery, so it maps to UF (Utilities Fees).
+    # Utility "Rebill" / "Reimbursed" lines are RUBS recovery REVENUE regardless of which
+    # side of the statement the operator parks them on. SCOPE this to genuine UTILITY
+    # recoveries — a bare "reimbursement" (vacation, renters-insurance, deposit, cable) is
+    # NOT a RUBS recovery and must fall through to normal section/keyword logic. The
+    # billing-PROGRAM cost ("rebill service"/"billing fee") is a utility EXPENSE -> UF.
+    util = re.search(r"water|sewer|electric|\bgas\b|utilit|trash|refuse|garbage|pest|"
+                     r"\brubs\b|rebill", n)
+    if re.search(r"rebill|reimburs|recover", n) and util:
+        # A reimbursement / recovery billed BACK to residents is RUBS REVENUE — even when it
+        # names the "service fee" being recovered ("Utility Rebill Service Fee Reimbursement").
+        # Only the bare service/fee/billing COST the property pays (no reimbursement word) is
+        # a utility EXPENSE -> UF.
+        recovery = re.search(r"reimburs|reimbursed|recover", n)
+        if not recovery and re.search(r"\b(fee|service|billing)s?\b", n):  return "UF"
+        if re.search(r"water|sewer", n):                  return "RWS"
+        if re.search(r"trash|refuse|garbage", n):         return "RT"
+        return "RF"
+    # A "Lease-Up Fee" is a one-time lease-up / marketing cost, NOT a recurring management
+    # fee. Operators file it under the Management Fees section (so it would inflate the
+    # mgmt-fee ratio); RedIQ books it to Marketing/Advertising. Validated on Tacara ($11k).
+    # Resolve before the management-fee rule below since the line names "fee".
+    if re.search(r"lease.?up", n) and re.search(r"\bfee", n):
+        return "adv"
+    # Management fee -> mgt regardless of section/spelling ('Managment' typo seen in the
+    # wild). Requires 'fee' so 'asset/property management PAYROLL' lines stay payroll.
+    if re.search(r"manage?ment fee", n):
+        return "mgt"
+    # Ground/land lease is NOT a real-estate tax (it lands in a 'Taxes & Insurance'
+    # section but is a land-rent expense) -> G&A, per RedIQ.
+    if re.search(r"ground lease|land lease", n):
+        return "GA"
+    # forced-placed / tenant-liability insurance EXPENSE -> G&A (per methodology), not Contract/Insurance
+    if re.search(r"forced.?placed|tenant liability insurance|legal liability insurance", n):
+        return "GA"
+    # uniforms -> G&A even when filed under payroll (RedIQ convention; it's a supply)
+    if re.search(r"uniform", n):
+        return "GA"
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 5b. AMBIGUITY FLAGS — lines the categorizer places only weakly, where the
+#     income-vs-expense or sub-bucket call is a genuine judgment. The skill should
+#     ASK the user to confirm these rather than silently trust the guess.
+# ---------------------------------------------------------------------------
+_AMBIGUOUS = [
+    (r"\bcam\b|common area maintenance|amenity fee",
+     "amenity/CAM fee — Other Income (OI) vs a resident recovery (RF); operator-specific"),
+    (r"miscellaneous|\bmisc\b|sundry|\bother (income|revenue|charges?)\b",
+     "generic 'miscellaneous / other income' line"),
+    (r"\bother (expense|expenses|operating)\b",
+     "generic 'other expense' line"),
+    (r"\badjustment", "generic 'adjustment' line — may belong below NOI"),
+]
+def ambiguity_reason(name, code=None):
+    """Return a short reason string if a line is genuinely ambiguous to categorize
+    (so the skill should confirm with the user), else None. Lines with a clear utility
+    signal route deterministically and are not flagged."""
+    n = (name or "").strip().lower()
+    if not n:
+        return None
+    # clearly-determined adjustments aren't ambiguous even if they mention 'other income'
+    if re.search(r"write.?off|bad debt|loss to lease|gain to lease|concession|vacanc", n):
+        return None
+    util = re.search(r"water|sewer|electric|\bgas\b|utilit|trash|refuse|garbage|pest|"
+                     r"\brubs\b|rebill", n)
+    if re.search(r"reimburs|recover", n) and not util:
+        return "non-utility 'reimbursement/recovery' — Other Income vs a cost recovery"
+    for pat, why in _AMBIGUOUS:
+        if re.search(pat, n):
+            return why
+    return None
+
+
+def _rev_adjustment(n):
+    """Revenue-side line-name classifier for the rent adjustments + RUBS that should
+    NOT be swept into Rental Income by a broad parent section. Returns a code or None.
+    Order matters: non-revenue/bad-debt before plain 'vacancy'; reimbursements last."""
+    if re.search(r"loss to lease|gain to lease|loss/gain|gain/loss|loss to old lease|"
+                 r"market (loss|gain)", n):                                       return "ltl"
+    if re.search(r"non.?revenue|employee unit|model (&|and|/)?\s*storage|model unit|"
+                 r"\bmodels?\b|storage unit|down unit|admin unit|staff unit|office unit|mgr unit", n): return "nr"
+    if re.search(r"bad debt|write.?off|collection loss|uncollect|skip", n):       return "cl"
+    if re.search(r"concession|free rent", n):                                     return "conc"
+    if re.search(r"vacanc|loss to vacancy", n):                                   return "vac"
+    # RUBS / utility reimbursements (Yardi often calls these "Rebill")
+    if re.search(r"(water|sewer).*(rebill|reimb|recover|rubs)|rubs.*(water|sewer)", n): return "RWS"
+    if re.search(r"trash.*(rebill|reimb|recover|rubs|pickup)|valet.*trash|rubs.*trash", n): return "RT"
+    if re.search(r"(electric|gas|pest|utility|util).*(rebill|reimb|recover)|"
+                 r"utility reimbursement|rubs", n):                               return "RF"
+    return None
+
+
+def categorize_t12_line(name, side, section_hint=None, acct_number=None):
+    """Best-guess standardized code for a raw T12 line item.
+
+    name         : raw account name (column A on the T12)
+    side         : "rev" or "exp" -- which side of the T12 the line sits on
+    section_hint : the operator's native subsection label, if known (preferred path)
+    acct_number  : optional GL number (unused by default; available for tie-breaks)
+    """
+    ov = _override(name)
+    if ov:
+        return ov
+    n = (name or "").strip().lower()
+    # NAME-FIRST revenue adjustments. Operators often nest vacancy, concessions,
+    # loss-to-lease, bad debt, non-revenue units and RUBS reimbursements UNDER a
+    # broad "Rental Income" / "Other Rental Income" parent, so the section family
+    # would wrongly pull them into Rentinc. The line name is the reliable signal
+    # for these, so resolve them before falling back to section logic.
+    if side == "rev":
+        radj = _rev_adjustment(n)
+        if radj:
+            return radj
+    fam = _family_from_section(section_hint)
+    if fam == "payroll":     return _split_payroll(n)
+    if fam == "marketing":   return "adv"
+    if fam == "admin":       return "GA"
+    if fam == "utilities":   return _split_utilities(n)
+    if fam == "makeready":   return _split_makeready(n)
+    if fam == "maintenance": return _split_maintenance(n)
+    if fam == "mgmt":        return "mgt"
+    if fam == "taxins":      return _split_taxins(n)
+    if fam == "contract":    return _split_contract(n)
+    if fam == "otherinc":    return _split_otherinc(n)
+    if fam == "rubs":        return _split_rubs(n)
+    if fam == "concession":  return "conc"
+    if fam == "rentadj":     return _split_rentadj(n)
+    if fam == "rent":        return _split_rent(n)
+    if fam == "writeoff":    return "cl"
+    if fam == "nonop":       return _split_nonop(n)
+    # no recognized section -> pure keyword fallback by side
+    return _match(name, REVENUE_RULES if side == "rev" else EXPENSE_RULES)
+
+
+# ---------------------------------------------------------------------------
+# 6. RENT-ROLL CHARGE-CODE -> (code, is_contract_rent, is_recurring)
+#    Contract rent = recurring rent charges (base Rent + Amenity/premium rent).
+#    Everything else is other income / reimbursements (separate T12 lines).
+# ---------------------------------------------------------------------------
+CHARGE_RULES = [
+    (r"amenity rent|premium|view premium|floor premium|upgrade premium", "Rentinc", True,  True),
+    (r"^rent$|base rent|market rent|gross rent|apartment rent",          "Rentinc", True,  True),
+    (r"loss to lease|gain to lease|loss/gain",                           "ltl",  False, True),
+    (r"concession|free rent|employee concession",                        "conc", False, True),
+    (r"parking|carport|garage|storage",                                  "park", False, True),
+    (r"valet trash|trash service|^trash",                                "RT",   False, True),
+    (r"water|sewer",                                                     "RWS",  False, True),
+    (r"utility reimburs|rubs|util.*billback|utility management|electric|gas", "RF", False, True),
+    (r"technology|tech package|cable|internet|media",                    "OI",   False, True),
+    (r"pet rent",                                                        "OI",   False, True),
+    (r"pet fee|pet charge|pet deposit",                                  "OI",   False, False),
+    (r"month to month|mtm",                                              "OI",   False, True),
+    (r"insurance|renters? liab|renters? insurance|homebody|deposit alternative", "OI", False, True),
+    (r"application fee",                                                 "OI",   False, False),
+    (r"admin|holding fee",                                               "OI",   False, False),
+    (r"late fee|nsf",                                                    "OI",   False, False),
+    (r"lease termination|lease buy|early term",                          "OI",   False, False),
+    (r"attorney|legal|filing fee|eviction",                             "OI",   False, False),
+    (r"maintenance charge|resident maintenance|damage|key|lock",         "OI",   False, False),
+    (r"referral",                                                        "OI",   False, False),
+    (r"clubroom|facility rental|clubhouse",                              "OI",   False, False),
+    (r".*",                                                              "OI",   False, False),
+]
+def categorize_charge(name):
+    low = (name or "").strip().lower()
+    for pat, code, is_cr, is_rec in CHARGE_RULES:
+        if re.search(pat, low):
+            return code, is_cr, is_rec
+    return "OI", False, False
