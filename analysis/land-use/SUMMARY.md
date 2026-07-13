@@ -9,34 +9,40 @@
 | `The Kelton - Land Use Viewer.html` | Self-contained interactive map (Leaflet bundled, no CDN). Toggle **Land Use / Zoning / Vacant Threats**, satellite/streets basemap, hover for parcel detail, export PNG. |
 | `The Kelton - Land Use Preview.png` | Land-use hero image of the 2-mile disc. |
 | `The Kelton - Vacant Threats Preview.png` | Threat view — the vacant parcels ranked by apartment-supply threat. |
+| `Vacant_Site_Status_Deep_Dive.md` | **Deeper follow-up** — exact status of each nearby vacant site from the AF/Lehi **General Plan / Developments / Subdivisions** layers + a 105-agent verified entitlement/records research pass. Read this for the per-site status detail. |
 | `Tables/` | `top10_concerning_vacant.csv`, the three crosswalk CSVs, `decisions_log.md`, `unmapped_codes.json`. |
 | `config.json`, `pull_merge.py` | The run's brain + the Utah-specific two-layer parcel pull (reproducible). |
 
-## Headline
-The Kelton sits **inside American Fork's single most active new-housing corridor**, so the
-competitive-supply threat is real but overwhelmingly a **townhome/attached + TOD** story, not
-large garden-apartment tracts.
+## Headline (refined by the deep-dive — see `Vacant_Site_Status_Deep_Dive.md`)
+The Kelton sits inside American Fork's **FrontRunner Station-Area / TOD district**. The supply threat
+splits cleanly by horizon:
 
-- **#1 threat — a 15.3-acre investor-owned parcel in the FrontRunner TOD zone, ~0.4 mi NW**, where
-  dense residential is buildable **by-right** (station on 200 S; the city's Station Area Plan clusters
-  multifamily within a half-mile; UTA double-tracking underway). Land is priced for development
-  (~$460k/acre).
-- **#2 — a ~98-acre band of development-priced vacant land abutting the subject (0.23 mi)**. Zoned
-  low-density residential-agricultural (apartments *not* by-right today), but valued at $400–470k/acre
-  and being platted/permitted for attached product **right now**: American Fork's project log shows
-  dozens of **Edgewater Townhomes** and **Meadowbrook** multifamily phases under construction on the
-  480–540 S / 700–1160 W blocks around the subject. Rezoning momentum — which AF is granting — is the risk.
-- Then **Blue Spring** (23 ac RA-5, developer-owned), a **Lehi Planned-Community** tract (19 ac,
-  plan-dependent), and small **TOD infill**.
-- **Screened out as non-threats:** Utah Lake shoreline (Shoreline Protection / Marina), UDOT highway
-  parcels, single-family-zoned tracts (deliver houses, not apartments), and government/HOA land.
+- **NEAR-TERM (0–3 yr) — townhomes-for-sale already in the ground next door.** **Edgewater** (=
+  **D.R. Horton**, sales office 351 S 1110 W) and **Meadowbrook** (= **Woodside**, 853 W 560 S) are
+  for-sale attached townhome communities — city-classified "Multifamily" — with multiple phases under
+  construction and several completed in 2025, plus a **123-unit "Meadowbrook TOD Phase 4" MF building
+  under review**. Real competition, but a different *tenure* (for-sale) than the Kelton's rentals.
+- **LONGER-TERM (3–7 yr) — a ~116-acre developer-held TOD land bank wraps the subject.** Inside AF's
+  ~444-acre TOD future-land-use area: **BACH Investments' 15.3-ac TOD parcel** (BACH = **Bach Homes**,
+  a prolific apartment builder — 350–700 units/yr, the 285-unit Bach Homes AF Apartments, the 338-unit
+  Elevate), plus **Silverado Partners (~13 ac)**, **OCAP AF TOD LLC (~6 ac)**, **AF I-15 LLC (~7 ac)**
+  and **~71 ac of RA-zoned-but-TOD-planned** family land. Highest-density (60+ du/ac) if built.
+- **Two key caveats:** (1) the TOD framework rides on the **American Fork Station Area Plan, which was
+  still a PROPOSED (not adopted) General Plan Amendment as of Aug 2025** — pipeline, not fully in force;
+  and (2) **no site plan is on file for the BACH parcel** — the apartment threat is credible but not
+  shovel-ready.
+- **Corrections (value ≠ entitlement):** Blue Spring (GP Residential Very-Low Density; part of its
+  land is going to UTA/UDOT for FrontRunner ROW), the Lehi "PC" tract (3 du/ac + wetlands; apartments
+  only via discretionary Area Plan), and Windy City (Very-Low-Density Res-Ag) are **down-ranked to Low**
+  — they are *not* near-term apartment sites. **Bridges at Fox Hollow** is detached single-family (87
+  lots), not multifamily.
 
-**Net read for underwriting:** genuinely large **by-right garden-apartment** sites near the Kelton
-are scarce; most by-right MF capacity is smaller TOD infill, and the biggest land banks still need a
-rezone. But the corridor is being actively densified with townhome/attached product, so **new
-competitive units will keep arriving immediately around the subject** — consistent with the
-supply-chart's read that near-term deliveries are modest but the location is a growth magnet. Pair
-this with the supply-chart (5-mi pipeline & absorption) for the full supply picture.
+**Net read for underwriting:** near-term competition is **for-sale townhomes** already under
+construction adjacent to the subject; the large **rental-apartment** threat is a credible but
+entitlement-dependent, **developer-held TOD land bank** (Bach Homes the anchor), not a Year-1/2 supply
+shock. This squares with the supply-chart's modest near-term pipeline while flagging a genuine
+long-horizon densification risk from the FrontRunner TOD build-out. Pair with the supply-chart for the
+5-mi picture.
 
 ## Data & method (see `Tables/decisions_log.md` for the full audit)
 - **Subject point verified** against the Utah County parcel footprint for "Kelton Apartments Phase 1

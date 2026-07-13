@@ -79,4 +79,53 @@ American Fork General Plan / Land_Use (`maps.afcity.org/.../Planning/Land_Use/Ma
 Zoning2; Lehi General Plan (`services5.arcgis.com/.../Lehi_General_Plan`); Utah County LIR + ownership
 layers (UGRC). Pulled 2026-07-13.
 
-<!-- WEB-RESEARCH SYNTHESIS (multi-agent entitlement/news pass) appended below on completion -->
+---
+
+# Web-Research Synthesis (multi-agent entitlement & records pass)
+
+*105 verification agents · 22 sources fetched · 89 claims extracted → 23 confirmed / 2 refuted ·
+adversarial 3-vote verification (2/3 refutes to kill). Full run archived in the workflow transcript.*
+
+## Who the owners actually are, and what is (and isn't) entitled
+
+| Site / owner | Verified status | Product / units | Horizon | Key source |
+|---|---|---|---|---|
+| **1. BACH Investments LLC** — 15.3 ac TOD (13:038:0068) | **Owner = Bach Homes** (Draper; Shon Rindlisbacher), a prolific apartment developer (350–700 units/yr; built 285-unit Bach Homes AF Apartments 2021, 338-unit Elevate). Holds ~67 Utah County parcels. **No site plan / development agreement on file** for this parcel. | TOD permits 60+ du/ac; product unfiled | **Longer-term (3–7 yr)** — highest ceiling, real developer, no filed project | Utah County land records; bachhomes.com; AF PC records |
+| **TOD framework — AF Station Area Plan** | **Still a PROPOSED General Plan Amendment** (PC recommendation Aug 20, 2025); Council adoption + MAG certification not confirmed. 509-ac CRA area, I-15→Utah Lake. | — | pipeline, **not yet in force** | utah.gov/pmn PC agenda 8/20/25; Psomas; KUTV |
+| **2. ~98-ac band (W of subject)** | **Ownership MIXED, largely unresolved** (individual names withheld). Control 13:041:0044 = Allred family (individual); 13:041:0080 = **Blue Spring LLC**, part **quit-claimed to UTA + UDOT easement (Apr-2026)** for FrontRunner double-track ROW. AF-side ~70 ac is **TOD in the General Plan**. No rezone/plat verified. | RA now / TOD-planned | **Longer-term, entitlement-dependent** | Utah County AbstractReverse / SerialByEntry; AF GP |
+| **3. Blue Spring Properties LLC** — 23 ac | AF GP **Residential Very-Low Density**; no plan/rezone/listing verified. | large-lot SF | **down-ranked → Low** | AF GP; Utah County records |
+| **4. Lehi 'PC' parcels** — 19 ac | Lehi PC base **3 du/ac**; apartments (12)/townhomes (8) only via **discretionary Area Plan**; also mapped Environmentally Sensitive; ~$18k/ac greenbelt value. No Area Plan on file. | discretionary only | **down-ranked → Low / long-horizon** | Lehi Dev Code Ch.6; Lehi GP |
+| **5. RH Johnson Construction** — ~1 ac (13:042:0028 +0062/0063) | **PC recommended 6-0 (Jan 8, 2025) to rezone PI-1 → TOD** — but staff-initiated **map cleanup, no project**; one parcel listed for sale; ROW dedication + FrontRunner double-tracking complicate it. | TOD if adopted; small | **Medium** (advancing, no project) | AF PC minutes 01/08/2025 |
+| **6. Windy City Development** — 51 ac | Lehi GP **Very-Low-Density Res-Ag**; no verified activity (status unresolved). | large-lot ag-res | **Low** | Lehi GP |
+| **7. Harbor Enterprises / Harbor View** | No verified development activity; near Utah Lake / Shoreline Protection. | — | **Low** | (coverage gap) |
+| **8. Walking the Wire** — 17 ac | R1-12000 / GP Residential Low Density; no verified activity. | single-family | **Low** | AF GP |
+| **Edgewater (D.R. Horton)** — 1110–1160 W / 480–530 S | **Real, entitled, delivering**: multiple phases under construction (4-28-26), phase Lots 243-248 **completed 12-23-25**; sales office 351 S 1110 W; ~$400–483k. | for-sale attached **townhomes** (city-classified Multifamily) | **NEAR-TERM (in the ground)** | AF Active/Pending report; drhorton.com |
+| **Meadowbrook (Woodside — 'Regency at Meadowbrook')** — 500–540 S / 700–800 W | **Real, actively selling/delivering**: ~10 phases, ~half completed 2025; sales 853 W 560 S; ~$468–495k. Plus **'Meadowbrook TOD Phase 4' = 123 MF units under review** (AF Developments GIS). | for-sale **townhomes** + 123-unit MF bldg | **NEAR-TERM** | AF Active/Pending report; woodsidehomes.com; AF Developments GIS |
+| **Bridges at Fox Hollow** — 1080 N 350 E | **Detached single-family / cottages, 87 lots (33 cottages + 54 SF)** — NOT apartments/townhomes. | detached SF | no MF threat | thebridgesatfoxhollow.com; afcitizen.com |
+| **Elevate at 620 / 'Bach High Pointe'** (context) | Elevate = 338-unit apt community (2024), = Lake City Row Ph 2 (~2,500-unit PC master plan, Vest Annexation 2019); Ph 3 includes 'Bach High Pointe' 144 apts + 16 TH. **~2 mi EAST** of the Kelton = citywide, not adjacent. | apartments | citywide, not adjacent | apartments.com; AF DRC records |
+
+**Refuted (do not rely on):** (a) that the Station Area is "already two-thirds built out"; (b) that
+"High Pointe Apartments, 695 E 620 S" is an approved apartment project with a unit count — it is only
+"application under review" (6-23-26) and may be conflated with the east-side "Bach High Pointe."
+
+**Open (unresolved) questions:** whether BACH has since filed a TOD site plan; the remaining owners of
+the ~98-ac assemblage and whether any is being platted; whether the Station Area Plan GPA has been
+formally adopted since Aug 2025 and its total programmed unit count; and the current status of
+Windy City / Harbor / Walking-the-Wire (unresolved, not confirmed inactive).
+
+## Bottom line for underwriting
+- **Near-term (0–3 yr) competition is townhomes-for-sale already under construction next door**
+  (Edgewater = D.R. Horton, Meadowbrook = Woodside) — a different *tenure* than the Kelton's rentals,
+  plus one 123-unit MF building under review. Real, but for-sale attached product, not a wave of new rentals.
+- **The large rental-apartment threat is a credible but entitlement-dependent, developer-held ~116-ac
+  TOD land bank** (Bach Homes/BACH the anchor) — high ceiling, no shovel-ready project, and riding on a
+  TOD plan that was still proposed, not adopted. A 3–7 yr risk to monitor, not a Year-1/2 supply shock.
+- **Several "development-priced" tracts are NOT apartment sites** (Blue Spring, Lehi PC, Windy City) —
+  the General Plan and Lehi code cap them at low density; value ≠ entitlement.
+- This is consistent with the deal's supply-chart (modest near-term pipeline) while flagging a real
+  long-horizon densification risk driven by the FrontRunner TOD build-out around the subject.
+
+*Primary web sources: AF Planning Commission minutes 01/08/2025; AF Community Development Active/Pending
+Projects report; utah.gov/pmn PC agendas (8/20/25); Psomas AF TOD; KUTV; Utah County land records
+(BACH name search, AbstractReverse 13:041:0080); bachhomes.com; D.R. Horton Edgewater; Woodside Regency
+at Meadowbrook; live-elevate.com; Lehi Development Code Ch. 6; Lehi FrontRunner Station Area Plan.*

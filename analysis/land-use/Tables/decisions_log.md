@@ -125,3 +125,34 @@ vacant land is additionally removed by the owner rule in classification.
 - American Fork TOD / FrontRunner Station Area Plan (Psomas; KSL; city Capital Projects); Lehi
   Development Code (Ch. 5 zoning districts, amlegal/lehi-ut.gov) for the zoning crosswalk.
 - Subject geocode cross-check: US Census onelineaddress (Public_AR_Current) — mis-match documented.
+
+## 10. Deep-dive refinement (follow-up — see Vacant_Site_Status_Deep_Dive.md)
+The reasoned ranking above was refined with two primary sources the base pass did not use — the
+American Fork & Lehi **General Plan (future land use)**, **Developments**, and **Subdivisions** GIS
+layers, and a **105-agent verified entitlement/records research pass** — which materially changed
+several calls (the ranking in in/reasoned_ranking.json reflects the refined view):
+- **General Plan > land value.** The base pass inferred development pressure from $/acre; the City's
+  General Plan is the real signal. The Kelton sits in AF's **~444-ac TOD future-land-use area**, of
+  which **~116 ac is still vacant** and largely developer-held (BACH/Bach Homes 15 ac, Silverado
+  Partners 13 ac, OCAP AF TOD 6 ac, AF I-15 7 ac, plus ~71 ac RA-zoned-but-TOD-planned family land).
+  Three of these owners had been **dropped by the no-zoning filter** (§7) — the AF zoning polygon layer
+  doesn't cover them, but the General Plan does; the GP overlay recovers them.
+- **#2 (98-ac band) elevated to High (longer-term):** its AF-side ~70 ac is RA-zoned today but
+  **TOD in the General Plan** — a rezone-in-waiting. But ownership is **mixed** (Allred family +
+  Blue Spring LLC), unresolved, and part (serial 13:041:0080) is being taken by **UTA/UDOT for
+  FrontRunner double-track ROW** — so it is raw TOD land, not an entitled project.
+- **Down-ranked to Low (value ≠ entitlement):** Blue Spring (GP Residential Very-Low Density), the
+  Lehi PC parcels (PC base 3 du/ac + Environmentally-Sensitive/greenbelt; apartments only via
+  discretionary Area Plan), and Windy City (GP Very-Low-Density Res-Ag).
+- **RH Johnson (Site 5)** contradicts "unentitled": PC recommended a PI-1→TOD rezone 6-0 on 1/8/2025,
+  but it is a staff map-cleanup with no project (kept Medium).
+- **Owner identity verified:** BACH Investments LLC = **Bach Homes** (Draper; Shon Rindlisbacher), an
+  active apartment developer — raising the #1 site's credibility even absent a filed site plan.
+- **Near-term supply identified:** Edgewater (D.R. Horton) and Meadowbrook (Woodside) are for-SALE
+  attached townhomes (city-classified "Multifamily") already delivering adjacent; Bridges at Fox
+  Hollow is detached SF (not MF). **Key caveat:** the TOD framework (Station Area Plan GPA) was still
+  **PROPOSED, not adopted** as of Aug 2025.
+- Added sources: AF General Plan / Developments / Subdivisions GIS (`maps.afcity.org`); Lehi General
+  Plan GIS; AF Planning Commission minutes 01/08/2025; utah.gov/pmn PC agendas (8/20/25); Utah County
+  land records (BACH name search; AbstractReverse 13:041:0080); bachhomes.com; D.R. Horton Edgewater;
+  Woodside Regency at Meadowbrook; Lehi Development Code Ch. 6.

@@ -1,55 +1,55 @@
 {
-  "headline": "The Kelton sits inside American Fork's single most active new-housing corridor, so the competitive supply threat is real but overwhelmingly a TOWNHOME/attached and TOD story rather than large garden-apartment tracts. The concrete near-term threat is the FrontRunner TOD/station area (200 South, ~0.4-0.6 mi north), where dense residential is buildable BY-RIGHT and the city's Station Area Plan explicitly clusters multifamily within a half-mile - including a 15-acre investor-owned TOD parcel ~0.4 mi away. Wrapping the subject on the west and south is a ~120-acre band of development-GRADE vacant land (valued $400-470k/acre, not farm value) that is technically zoned low-density residential-agricultural but is being platted and permitted for attached product in real time: American Fork's project log shows dozens of Edgewater Townhome and Meadowbrook multifamily phases under construction on the very blocks around the subject (480-540 S / 700-1160 W). The binding risk on those large tracts is rezoning momentum, not current entitlement - and American Fork is granting it. Farther southwest, Lehi's agricultural and Planned-Community land toward Utah Lake is a longer-horizon watch (low land values, must be master-planned/rezoned). Genuinely large by-right garden-apartment sites are scarce; most by-right MF capacity is smaller TOD infill, and the biggest land banks still need a rezone. Lakeshore (Shoreline Protection / Marina), highway (UDOT), and government/HOA parcels were screened out as non-developable for apartment supply.",
+  "headline": "The Kelton sits inside American Fork's FrontRunner Station-Area / TOD district. Refined with the city's General Plan plus a verified entitlement/records pass, the supply picture splits cleanly by horizon. NEAR-TERM (0-3 yr): competitive attached-housing supply is ALREADY DELIVERING immediately around the subject - D.R. Horton's 'Edgewater' townhomes (sales office 351 S 1110 W, multiple phases under construction, first phase completed Dec-2025) and Woodside's 'Meadowbrook / Regency at Meadowbrook' townhomes (853 W 560 S, ~10 phases, ~half completed in 2025) - both for-SALE townhomes but city-classified 'Multifamily,' with a 123-unit 'Meadowbrook TOD Phase 4' multifamily building now under review. LONGER-TERM (3-7+ yr): the dominant future apartment threat is a ~116-acre band of vacant, largely developer-held land inside American Fork's ~444-acre TOD future-land-use area wrapped around the subject - anchored by BACH Investments LLC's 15.3-ac TOD parcel (BACH = Bach Homes of Draper, a prolific apartment builder: 350-700 units/yr, the 285-unit Bach Homes AF Apartments, the 338-unit Elevate/Lake City Row) plus Silverado Partners (~13 ac), OCAP AF TOD LLC (~6 ac), AF I-15 LLC (~7 ac) and ~71 ac of RA-zoned-but-TOD-planned family land. IMPORTANT CAVEAT: the TOD zoning that permits the city's highest density (60+ du/ac) rides on the American Fork Station Area Plan, which was still only a PROPOSED (Planning-Commission-recommended, not yet Council-adopted) General Plan Amendment as of Aug 2025 - the pipeline is real but not fully in force, and NO specific site plan or development agreement is on file for BACH's parcel. CORRECTIONS to the base analysis (development-priced land value did NOT equal apartment entitlement): Blue Spring (General Plan Residential Very-Low Density; part of its land, serial 13:041:0080, is being conveyed to UTA/UDOT for FrontRunner double-track right-of-way), the Lehi 'PC' parcels (base 3 du/ac + Environmentally-Sensitive/greenbelt, apartments only via discretionary Area Plan), and Windy City (Very-Low-Density Res-Ag) are down-ranked to Low - they are NOT near-term apartment sites. Bridges at Fox Hollow is detached single-family (87 lots), not multifamily. Net: near-term competition is townhomes-for-sale already in the ground; the large rental-apartment threat is a credible but entitlement-dependent, developer-held TOD land bank, not shovel-ready.",
   "ranking": [
     {
       "match": { "account": "130380068" },
-      "reasoned_threat": "High",
-      "rationale": "The single largest by-right multifamily-capable vacant site near the subject: ~15.3 acres in American Fork's TOD (Transit-Oriented Development) zone, ~0.4 mi NW, owned by BACH INVESTMENTS LLC and assessed at ~$7.0M ($460k/acre = development-grade, not raw land). TOD is form-based and permits dense residential by-right; the city's FrontRunner Station Area Plan (station on 200 South, with UTA double-tracking underway) explicitly clusters multifamily/live-work within a half-mile. Directly competitive future apartment/mixed-use supply within walking distance."
+      "reasoned_threat": "High (longer-term)",
+      "rationale": "The single most credible future apartment site: 15.3 vacant acres zoned TOD, ~0.4 mi NW, owned by BACH INVESTMENTS LLC. Verified: BACH = an affiliate of Bach Homes (Draper, UT; principal Shon Rindlisbacher), a self-described land-development/apartment-construction firm that adds 350-700 apartment units/yr and already built the 285-unit Bach Homes American Fork Apartments (2021) and the 338-unit Elevate at 620 - clear capacity and intent to develop a TOD site at 60+ du/ac. BUT no site plan, preliminary plat, or development agreement for parcel 13:038:0068 survived verification, and the TOD framework itself (Station Area Plan GPA) was still only PC-recommended/not-adopted as of Aug 2025. So: highest ceiling, real developer, no filed project yet -> a 3-7 yr threat, not imminent. Sources: Utah County land records; bachhomes.com; AF PC records."
     },
     {
       "match": { "account": "130410080" },
-      "reasoned_threat": "Medium (High-Watch)",
-      "rationale": "The dominant land bank abutting the subject: a ~98-acre assemblage of vacant parcels immediately west (AF RA-1/RA-5 and Lehi A-5), 0.23 mi away, 9 parcels. Base zoning is low-density residential-agricultural (apartments NOT by-right), which would normally be Low - but the land is assessed at $400-470k/acre (development, not farm, value) and it lies in the exact corridor where American Fork is actively platting and permitting attached product (Edgewater Townhomes and Meadowbrook multifamily, dozens of phases under construction at 480-540 S / 700-1160 W). Strong rezoning optionality plus demonstrated, current entitlement momentum. Even built as attached townhomes rather than garden apartments, this adds substantial competitive density immediately next door. Individually-held (owner names withheld for natural persons in the public GIS), consistent with a farm assemblage being sold to builders piecemeal."
-    },
-    {
-      "match": { "account": "130390027" },
-      "reasoned_threat": "Medium (Low-Watch)",
-      "rationale": "~23 acres vacant, ~0.45 mi south, compact (Polsby-Popper 0.78), owned by BLUE SPRING PROPERTIES LLC and assessed ~$460k/acre (development-grade). Zoned AF RA-5 (agricultural; apartments not by-right today) so not an as-of-right threat, but developer-owned, close, compact and priced for development in the active corridor - a realistic rezoning-to-attached candidate on a medium horizon."
-    },
-    {
-      "match": { "account": "130720029" },
-      "reasoned_threat": "Medium (Unknown baseline)",
-      "rationale": "~19 acres vacant in Lehi's Planned Community (PC) district, ~0.9 mi SW. PC is master-plan-driven and Lehi PC areas have historically delivered apartments, so the ceiling is high - but the negotiated plan governs and here land value is low (~$18k/acre), indicating raw/holding land that is not imminently entitled. Real but plan-dependent and longer-dated than the AF corridor tracts."
+      "reasoned_threat": "High (longer-term, entitlement-dependent)",
+      "rationale": "The ~98-ac band abutting the subject (0.23 mi). Its AF-side ~70 acres is zoned RA-1/RA-5 today but designated Transit-Oriented Development in American Fork's General Plan - a rezone-in-waiting to high density, and part of a ~116-ac vacant TOD land bank around the Kelton also held by Silverado Partners LLC (~13 ac), OCAP AF TOD LLC (~6 ac) and AF I-15 LLC (~7 ac). Verified nuance: ownership is MIXED, not a single individual assemblage - control serial 13:041:0044 is individually held (Allred family) while 13:041:0080 in this cluster is actually BLUE SPRING PROPERTIES LLC, part of which was quit-claimed to UTA (+a UDOT easement) in Apr-2026 for FrontRunner double-track right-of-way. No rezone, plat, or master plan for these specific parcels survived verification. So: large TOD-planned land bank = a genuine long-horizon high-density threat, but raw, multi-owner, partly being consumed by transit infrastructure - not an entitled project. Sources: AF General Plan (Land_Use GIS); Utah County AbstractReverse/SerialByEntry."
     },
     {
       "match": { "account": "130420028" },
       "reasoned_threat": "Medium",
-      "rationale": "~1.1 acres vacant in the AF TOD zone at 518 W 200 S (~0.65 mi N, in the station area), owned by RH JOHNSON CONSTRUCTION INC. By-right dense residential like the larger TOD parcel, but small - meaningful as part of the TOD build-out rather than as a stand-alone complex."
-    },
-    {
-      "match": { "account": "130360017" },
-      "reasoned_threat": "Low-Watch",
-      "rationale": "~51 acres vacant, ~1.0 mi SW, owned by WINDY CITY DEVELOPMENT LLC. A large developer-held holding, but zoned Lehi A-5 (agricultural), low land value (~$61k/acre) and pushed toward Utah Lake - a long-horizon rezone play, not near-term competitive apartment supply."
+      "rationale": "RH Johnson Construction's parcel at 518 W 200 S is one of three parcels (13:042:0028/0062/0063, ~7.2 ac) the American Fork Planning Commission recommended 6-0 on Jan 8, 2025 to rezone from Planned Industrial (PI-1) to TOD - so it is entitlement-ADVANCING, contradicting a 'vacant/unentitled' read. But city staff stated it was a staff-initiated MAP CLEANUP 'not due to any proposed project'; one parcel is listed for sale; and staff flagged that development is 'challenged' by required right-of-way dedication and the FrontRunner double-tracking. By-right TOD density if adopted, but small and constraint-laden. Source: AF PC minutes 01/08/2025."
     },
     {
       "match": { "account": "130160136" },
       "reasoned_threat": "Low-Watch",
-      "rationale": "~37 acres vacant (Lehi A-5 with a commercial edge), ~0.6 mi N near the freeway. Agricultural today; some commercial/residential rezoning optionality given the corridor, but no MF entitlement now."
+      "rationale": "~37 vacant acres ~0.6 mi N (Lehi), zoned A-5 today but designated 'Commercial / Residential' in Lehi's General Plan - so residential (incl. attached) is plan-supported and a rezone is plausible over time. No filed application verified. A medium-horizon watch, not near-term. Source: Lehi General Plan (GIS)."
+    },
+    {
+      "match": { "account": "130390027" },
+      "reasoned_threat": "Low (down-ranked)",
+      "rationale": "Blue Spring Properties' ~23 ac, ~0.45 mi S. DOWN-RANKED from the base 'Medium': American Fork's General Plan designates it Residential VERY-LOW Density (large-lot single-family), not apartments, and no development plan, rezone, or listing survived verification. High assessed value reflects hot-market low-density lot value, not apartment entitlement. (Blue Spring also owns TOD-area land near the station, serial 13:041:0080, part of which is being taken by UTA/UDOT for transit ROW.) Not an apartment threat as planned. Source: AF General Plan; Utah County records."
+    },
+    {
+      "match": { "account": "130720029" },
+      "reasoned_threat": "Low (down-ranked)",
+      "rationale": "The Lehi 'Planned Community' parcels (~19 ac, ~0.9 mi SW). DOWN-RANKED from base 'Medium-Unknown': the Lehi PC zone sets a base residential density of only 3 du/acre, and apartments (12 du/ac) or townhomes (8 du/ac) are legally possible ONLY as higher-density pods via discretionary Area Plan approval, offset by lower-density pods; the parcels are also mapped 'Environmentally Sensitive Area' and carry a ~$18k/ac (greenbelt/Farmland-Assessment) value. No active Area Plan for these parcels was found. A long-horizon, discretionary rezone play near Utah Lake - low near-term threat. Source: Lehi Development Code Ch.6; Lehi General Plan."
+    },
+    {
+      "match": { "account": "130360017" },
+      "reasoned_threat": "Low (down-ranked)",
+      "rationale": "Windy City Development's ~51 ac, ~1.0 mi SW, zoned Lehi A-5 and designated 'Very-Low-Density Residential Agriculture' in Lehi's General Plan. No annexation, rezone, plat, or listing survived verification (status unresolved, but nothing supports an apartment use). Large developer-held holding, but the plan is large-lot ag-residential - not competitive apartment supply. Source: Lehi General Plan."
     },
     {
       "match": { "account": "130430103" },
-      "reasoned_threat": "Low-Watch",
-      "rationale": "~8.6 acres vacant, ~0.56 mi, owned by HARBOR ENTERPRISES LLC; AF RA-5 (agricultural). Small, close, developer-owned - a plausible attached-product rezone in the active corridor but modest in scale."
+      "reasoned_threat": "Low",
+      "rationale": "Harbor Enterprises' ~8.6 ac RA-5, ~0.56 mi S; AF General Plan Residential Low Density. Small, SF-planned, no verified activity. Not an apartment threat."
     },
     {
       "match": { "account": "130700025" },
       "reasoned_threat": "Low",
-      "rationale": "~17 acres vacant, ~0.8 mi, owned by WALKING THE WIRE LLC; AF R1-12000 (single-family). Will deliver a single-family subdivision, not apartments - not competitive rental supply."
+      "rationale": "Walking the Wire's ~17 ac, zoned R1-12000 and AF General Plan Residential Low Density - a single-family subdivision, not apartments. No verified development activity. Confirmed low."
     },
     {
       "match": { "account": "130750025" },
       "reasoned_threat": "Low",
-      "rationale": "~19 acres, ~1.8 mi S, owned by HARBOR VIEW DEVELOPMENT LLC; AF PR-2.0 (planned residential at ~2 du/acre) partly in Shoreline Protection, sliver-shaped (PP 0.19), near Utah Lake. Low density and constrained - not an apartment threat despite the developer owner."
+      "rationale": "Harbor View Development's ~19 ac ~1.8 mi S is largely AF 'Shoreline Protection' (non-developable lakeshore) with a low-density PR-2.0 remnant; sliver-shaped. Not an apartment site."
     }
   ]
 }
