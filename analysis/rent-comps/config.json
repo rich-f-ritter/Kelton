@@ -1,15 +1,15 @@
 {
  "title": "The Kelton",
- "submarket": "Provo\u2013Orem\u2013Lehi / North Utah County",
+ "submarket": "American Fork \u2192 Lehi / Traverse Mountain",
  "as_of": "2026-07-13",
  "t_days": 90,
- "hellodata_csv": "/home/user/Kelton/data/hellodata/HelloData_5mi_Unit_Details_2026-07-13.csv",
- "sources": "HelloData unit-details (13 Jul 2026, T90-day executed) \u00b7 CoStar 5-mi property export (SF by bedroom + occupancy) \u00b7 Subject rent roll (16 Jun 2026) \u00b7 Esri/OpenStreetMap.",
+ "hellodata_csv": "/home/user/Kelton/data/hellodata/HelloData_combined_Kelton+TraverseMtn_2026-07-13.csv",
+ "sources": "HelloData unit-details (13 Jul 2026, T90-day executed rents; Kelton 5-mi pull + Seasons/Traverse-Mtn comp pull) \u00b7 CoStar 5-mi property export (SF by bedroom + occupancy) \u00b7 Terra Vista & Seasons identity/SF/counts from the TMG Seasons of Traverse Mountain model (CoStar-sourced) \u00b7 Subject rent roll (16 Jun 2026) \u00b7 Esri/OpenStreetMap.",
  "cluster_colors": {
-  "American Fork": "#074070",
-  "Lehi / North County": "#189AB4"
+  "American Fork \u2014 Adjacent": "#074070",
+  "American Fork \u2014 North": "#2E86C1",
+  "Lehi / Traverse Mtn": "#1E8449"
  },
- "footnote": "Rent & total-PSF columns are color-scaled down each column across the comps (pale red = lower, pale blue = higher; subject = cream, excluded). Rent (by bedroom) = HelloData T90-day executed asking (market) rent on leases that went off-market 14 Apr\u201313 Jul 2026; Total\u2013Effective = HelloData effective (net of concessions); Conc = 1 \u2212 Eff \u00f7 Gross. SF (by bedroom & total) = CoStar avg SF by unit type; subject SF/counts = subject rent roll. Comp unit counts = CoStar; Occ % = CoStar occupied (1 \u2212 vacancy); Leased % = HelloData. Comps grouped by submarket cluster: American Fork (subject submarket) vs Lehi / North County. PSF = total rent \u00f7 total SF.",
  "subject": {
   "name": "The Kelton",
   "hd_key": "The Kelton Apartments",
@@ -38,9 +38,35 @@
  },
  "comps": [
   {
+   "name": "The Yard",
+   "hd_key": "The Yard",
+   "cluster": "American Fork \u2014 Adjacent",
+   "owner": "Gregory Bird",
+   "year": 2023,
+   "units": 216,
+   "avg_sf": 969,
+   "occ_costar": 0.8194,
+   "counts": [
+    0,
+    123,
+    31,
+    62
+   ],
+   "bed_sf": [
+    null,
+    789,
+    1022,
+    1299
+   ],
+   "address": "1107 W 250 S, American Fork, UT 84003",
+   "lat": 40.3715405,
+   "lng": -111.8267122,
+   "dist": 0.1
+  },
+  {
    "name": "Ember Peaks at American Fork",
    "hd_key": "Ember Peaks at American Fork",
-   "cluster": "American Fork",
+   "cluster": "American Fork \u2014 Adjacent",
    "owner": "Elysian Living",
    "year": 2022,
    "units": 320,
@@ -59,14 +85,14 @@
     1351
    ],
    "address": "299 S 850 W, American Fork, UT 84003",
-   "lat": 40.371173,
+   "lat": 40.3711726,
    "lng": -111.820945,
    "dist": 0.2
   },
   {
    "name": "Meadows at American Fork",
    "hd_key": "Meadows at American Fork",
-   "cluster": "American Fork",
+   "cluster": "American Fork \u2014 Adjacent",
    "owner": "Brad Reynolds Construction",
    "year": 2019,
    "units": 350,
@@ -84,15 +110,15 @@
     981,
     1309
    ],
-   "address": "751 W 200 South, American Fork, UT 84003",
-   "lat": 40.371839,
+   "address": "751 W 200 S, American Fork, UT 84003",
+   "lat": 40.3718394,
    "lng": -111.818178,
    "dist": 0.4
   },
   {
    "name": "Millpond",
    "hd_key": "Millpond",
-   "cluster": "American Fork",
+   "cluster": "American Fork \u2014 North",
    "owner": "Aldon Management",
    "year": 2020,
    "units": 214,
@@ -110,15 +136,15 @@
     1220,
     1598
    ],
-   "address": "79 N 1020 West, American Fork, UT 84003",
-   "lat": 40.378906,
-   "lng": -111.825213,
+   "address": "79 N 1020 W, American Fork, UT 84003",
+   "lat": 40.3789058,
+   "lng": -111.8252134,
    "dist": 0.5
   },
   {
    "name": "Alvera at The Meadows",
    "hd_key": "Alvera at The Meadows",
-   "cluster": "American Fork",
+   "cluster": "American Fork \u2014 North",
    "owner": "Gelt Inc.",
    "year": 2022,
    "units": 142,
@@ -137,118 +163,40 @@
     1258
    ],
    "address": "688 W Nicholes Ln, American Fork, UT 84003",
-   "lat": 40.380255,
+   "lat": 40.3802553,
    "lng": -111.816799,
    "dist": 0.8
   },
   {
-   "name": "Parc on 5th",
-   "hd_key": "Parc On 5th Apartments & Townhomes",
-   "cluster": "American Fork",
-   "owner": "Wasatch Group",
-   "year": 2019,
-   "units": 300,
-   "avg_sf": 1042,
-   "occ_costar": 0.9533,
+   "name": "Lehi Tech Apartments",
+   "hd_key": "Lehi Tech Apartments",
+   "cluster": "American Fork \u2014 North",
+   "owner": "Lotus",
+   "year": 2020,
+   "units": 329,
+   "avg_sf": 889,
+   "occ_costar": 0.9392,
    "counts": [
     0,
-    96,
-    165,
-    39
+    147,
+    182,
+    0
    ],
    "bed_sf": [
     null,
-    747,
-    1121,
-    1440
+    702,
+    1040,
+    null
    ],
-   "address": "521 S 500 E, American Fork, UT 84003",
-   "lat": 40.366139,
-   "lng": -111.783487,
-   "dist": 2.2
-  },
-  {
-   "name": "Elevate at 620",
-   "hd_key": "Elevate At 620",
-   "cluster": "American Fork",
-   "owner": "FourSite Property Mgmt",
-   "year": 2024,
-   "units": 338,
-   "avg_sf": 930,
-   "occ_costar": 0.932,
-   "counts": [
-    45,
-    119,
-    146,
-    28
-   ],
-   "bed_sf": [
-    632,
-    751,
-    1029,
-    1654
-   ],
-   "address": "742 E 620 S, American Fork, UT 84003",
-   "lat": 40.363345,
-   "lng": -111.779314,
-   "dist": 2.5
-  },
-  {
-   "name": "Rivulet Apartments",
-   "hd_key": "Rivulet\u00a0Apartments",
-   "cluster": "American Fork",
-   "owner": "Wasatch Group",
-   "year": 2017,
-   "units": 252,
-   "avg_sf": 945,
-   "occ_costar": 0.9365,
-   "counts": [
-    0,
-    68,
-    140,
-    44
-   ],
-   "bed_sf": [
-    null,
-    706,
-    994,
-    1155
-   ],
-   "address": "449 S 860 E, American Fork, UT 84003",
-   "lat": 40.36748,
-   "lng": -111.7739,
-   "dist": 2.7
-  },
-  {
-   "name": "Northshore",
-   "hd_key": "Northshore",
-   "cluster": "Lehi / North County",
-   "owner": "Millburn & Company",
-   "year": 2022,
-   "units": 230,
-   "avg_sf": 1098,
-   "occ_costar": 0.9435,
-   "counts": [
-    0,
-    60,
-    110,
-    60
-   ],
-   "bed_sf": [
-    null,
-    789,
-    1130,
-    1352
-   ],
-   "address": "1033 E Bearing Dr, Saratoga Springs, UT 84045",
-   "lat": 40.36594,
-   "lng": -111.893246,
-   "dist": 3.6
+   "address": "200 S 1350 E, Lehi, UT 84043",
+   "lat": 40.3855933,
+   "lng": -111.8294623,
+   "dist": 1.0
   },
   {
    "name": "Embold",
    "hd_key": "Embold",
-   "cluster": "Lehi / North County",
+   "cluster": "Lehi / Traverse Mtn",
    "owner": "Wasatch Group",
    "year": 2022,
    "units": 232,
@@ -266,15 +214,15 @@
     1166,
     1449
    ],
-   "address": "2377 N 1200 West, Lehi, UT 84043",
-   "lat": 40.41919,
-   "lng": -111.86934,
+   "address": "2377 N 1200 W, Lehi, UT 84043",
+   "lat": 40.4191904,
+   "lng": -111.8693397,
    "dist": 4.1
   },
   {
    "name": "The Vue",
    "hd_key": "The Vue",
-   "cluster": "Lehi / North County",
+   "cluster": "Lehi / Traverse Mtn",
    "owner": "Perry Commercial",
    "year": 2022,
    "units": 308,
@@ -296,6 +244,59 @@
    "lat": 40.433876,
    "lng": -111.862415,
    "dist": 4.8
+  },
+  {
+   "name": "Terra Vista Lehi",
+   "hd_key": "Terra Vista Lehi",
+   "cluster": "Lehi / Traverse Mtn",
+   "owner": "Riverbend Management",
+   "year": 2024,
+   "units": 317,
+   "avg_sf": 918,
+   "occ_costar": null,
+   "counts": [
+    0,
+    166,
+    127,
+    24
+   ],
+   "bed_sf": [
+    null,
+    764,
+    1036,
+    1365
+   ],
+   "address": "3851 N Traverse Mountain Blvd, Lehi, UT 84043",
+   "lat": 40.43496,
+   "lng": -111.87653,
+   "dist": 5.2
+  },
+  {
+   "name": "Seasons of Traverse Mountain",
+   "hd_key": "Seasons of Traverse Mountain",
+   "cluster": "Lehi / Traverse Mtn",
+   "owner": "Paul Willie",
+   "year": 2014,
+   "units": 440,
+   "avg_sf": 905,
+   "occ_costar": null,
+   "counts": [
+    0,
+    170,
+    220,
+    50
+   ],
+   "bed_sf": [
+    null,
+    709,
+    994,
+    1185
+   ],
+   "address": "4200 N Seasons View Dr, Lehi, UT 84043",
+   "lat": 40.43897,
+   "lng": -111.87025,
+   "dist": 5.3
   }
- ]
+ ],
+ "footnote": "Rent & total-PSF columns are color-scaled down each column across the comps (pale red = lower, pale blue = higher; subject = cream, excluded). Rent (by bedroom) = HelloData T90-day executed asking (market) rent on leases off-market 14 Apr\u201313 Jul 2026; Total\u2013Effective = HelloData effective (net of concessions); Conc = 1 \u2212 Eff \u00f7 Gross. SF (by bedroom & total) = CoStar avg SF by unit type; subject SF/counts = subject rent roll; comp unit counts = CoStar. Occ % = CoStar occupied (1 \u2212 vacancy); Leased % = HelloData. Clusters: American Fork \u2014 Adjacent (right next to the subject) \u00b7 American Fork \u2014 North \u00b7 Lehi / Traverse Mountain. The Yard & Terra Vista are in initial lease-up; Terra Vista & Seasons sit ~5 mi north (outside the 5-mi CoStar pull) so identity/SF/counts come from the TMG Seasons model (CoStar-sourced) and they carry no CoStar occupancy (Leased %-HD shown). Seasons is shown apartment-only (440 units); the adjacent Seasons townhomes on its website are excluded. PSF = total rent \u00f7 total SF."
 }
