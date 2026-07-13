@@ -135,3 +135,35 @@ Initial build returned `BUILD_INCOMPLETE` (rent roll parsed 0 units); root cause
 - **Bed/bath** — added HelloData by-unit join so the One-Line per-unit Bed/Bath populate (240/240).
 
 comp_rev ties to operator TOTAL INCOME to the penny after fixes; audit exceptions unchanged (2).
+
+---
+
+## Addendum (2026-07-13): HelloData fee netting — $109/mo Internet/Cable removed
+
+Per analyst direction, re-ran the intake with `--hd-fee-offset 109`. HelloData scrapes the
+property's advertised "Total Monthly," which bundles the mandatory **$109/mo Internet/Cable**
+charge (uniform across all 224 occupied units, confirmed on the rent roll). That charge is
+already booked as **Cable Income (~$24.6k/mo) in Other Income**, so leaving it in HD market
+rent double-counts it. It is now netted from **both** HD asking and effective (T90, T365, and
+both legs of the YoY reads).
+
+| HD T90 (mix-wtd) | Gross | Net of $109 |
+|---|---|---|
+| Asking | $1,595 | **$1,486** |
+| Effective | $1,501 | **$1,392** |
+
+**Validation:** net HD asking **$1,486** sits **$2** above the new-lease base contract rent
+**$1,484** — and that $2 is precisely the remaining Pest Control fee. Netting the bundle lands
+HD's advertised price on top of the executed base rent, confirming the $109 was a bundled fee,
+not a market premium. (To strip the pest too, use `--hd-fee-offset 111`; the $2 is immaterial.)
+NOI unchanged at $3,008,750 — the netting affects only the market-rent signal.
+
+### When did HelloData start picking it up?
+No discrete onset is detectable in HelloData's own series. Tracked per floor plan, the subject's
+asking rents rise **gradually** from a late-2024/early-2025 trough into 2026 (organic recovery —
+Gilson steps up ~2025 Q3, Hansel ~2026 Q1, Pahvant gradually), with **no synchronized ~$109
+one-month jump**. A constant bundled fee present throughout HD's coverage would not create a step
+— it is a level shift baked into every period — which is consistent with HelloData having
+reflected the property's all-in "Total Monthly" price **since it began tracking the asset
+(listings back to ~mid-2023 lease-up)**. A definitive onset date would require the property's
+website/ILS advertising history, which the HelloData export does not timestamp.
