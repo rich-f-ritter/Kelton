@@ -17,7 +17,7 @@ Grouped exactly as you framed it: the immediate neighborhood, the ring just nort
 **Ring 1 — American Fork · Adjacent (0.1–0.4 mi · the same pocket, west AF):**
 | # | Comp | Yr | Units | Avg SF | Occ (CoStar) | Leased (HD) |
 |---|------|----|-------|--------|--------------|-------------|
-| 1 | **The Yard** | 2023 | 216 | 969 | 82% | 68% |
+| 1 | **The Yard** | 2023 | 216 | 929 | 82% | 68% |
 | 2 | Ember Peaks at American Fork | 2022 | 320 | 951 | 93% | 97% |
 | 3 | Meadows at American Fork | 2019 | 350 | 999 | 96% | 96% |
 
@@ -41,13 +41,13 @@ The single blended number is misleading here because the three rings price very 
 
 | Ring | Unit-wtd gross | Unit-wtd effective | Subject vs ring (gross / eff) |
 |------|----------------|--------------------|-------------------------------|
-| **1 · AF Adjacent** (Yard/Ember/Meadows) | **$1,592** | **$1,440** | **+0% / +4%** |
+| **1 · AF Adjacent** (Yard/Ember/Meadows) | **$1,582** | **$1,429** | **+1% / +5%** |
 | 2 · AF North (Millpond/Alvera/Lehi Tech) | $1,468 | $1,350 | +9% / +11% |
 | 3 · Lehi / Traverse (Embold/Vue/Terra Vista/Seasons) | $1,740 | $1,659 | −8% / −9% |
-| **All 10 (unit-wtd)** | **$1,629** | **$1,517** | **−2% / −1%** |
+| **All 10 (unit-wtd)** | **$1,626** | **$1,514** | **−2% / −1%** |
 
 **Read:**
-- **Against its own pocket (Ring 1), the Kelton is already at market on gross and *ahead* on effective.** The immediate neighbors post similar asking rents (~$1,592) but concede hard — **Ember 13%, Meadows 13%** — so their *effective* falls to ~$1,440 vs the Kelton's $1,502. The Kelton's 6% concession is lighter, so it out-earns its neighbors net-of-concession today. The Yard (0% concession but 68% leased) is still filling and hasn't had to buy occupancy yet.
+- **Against its own pocket (Ring 1), the Kelton is already at market on gross and *ahead* on effective.** The immediate neighbors post similar asking rents (~$1,582) but concede hard — **Ember 13%, Meadows 13%** — so their *effective* falls to ~$1,429 vs the Kelton's $1,502. The Kelton's 6% concession is lighter, so it out-earns its neighbors net-of-concession today. The Yard (0% concession but 68% leased) is still filling and hasn't had to buy occupancy yet.
 - **The North ring (Ring 2) prices below the Kelton** — these are the value end of AF.
 - **The rent "upside" is almost entirely the Lehi / Traverse Mountain ring (Ring 3)**, which runs $1,740 gross / $1,659 effective — ~8–9% above the subject. But that's a different, stronger submarket (Silicon Slopes / Traverse Mountain, 4–5 mi north): newer or premium product, higher-income tenancy. Treat it as the *aspirational* bracket, not the achievable-tomorrow bracket. Terra Vista (2024, in lease-up) prints the top gross ($1,902) but concedes 15% down to $1,609 effective.
 
@@ -66,8 +66,25 @@ The 3BR gap is real but concentrated in the Lehi/Traverse comps (Embold $2,423, 
 - **Terra Vista Lehi** (2024, 317u, Riverbend/Greystar) and **Seasons of Traverse Mountain** (2014, 440u, Paul Willie/MSM) are ~5 mi north, **outside the 5-mi CoStar and HelloData pulls** used for the AF set. Identity, per-bedroom SF, and unit counts come from the **TMG Seasons of Traverse Mountain acquisition model** (which sources them from CoStar). Executed rents are computed on the **same HelloData T90 basis** as every other comp, from the Seasons rent-comp HelloData pull you provided. They carry **no CoStar occupancy** (blank Occ % — the Leased %-HD is the occupancy signal).
 - **Seasons is shown apartment-only (440 units: 170 / 220 / 50).** Per your note, the Seasons website lumps in the **adjacent townhomes**, which are not on the actual apartment unit mix. Two checks confirm the table is clean: (a) counts/SF come from the model's apartment-only mix, not the website; (b) every Seasons lease that executed in the T90 window was apartment-sized (1BR ~711 SF, 2BR ~995, 3BR ~1,185) — **zero townhome-sized leases** (the oversized 2BR/3BR townhome plans didn't lease in-window), so the executed rents ($1,362 / $1,639 / $1,945) aren't inflated by townhome pricing.
 
+## The Yard — unit mix (dug in)
+**Confirmed (high confidence):** 216 units · 1 property · 3 stories · ~12 buildings · Class A · built 2023 · **exactly 3 floor plans** — 1BR/1ba **789 SF**, 2BR/2ba **1,022 SF**, 3BR/2ba **1,299 SF** (apartments.com, CoStar, HelloData all agree on the plans/SF). Currently ~82% occupied (39 vacant), still in lease-up.
+
+**The per-plan counts are not cleanly published, and CoStar's are provably wrong.** CoStar lists **123 / 31 / 62** (1/2/3BR). That can't be right:
+- It shows only **31 two-bedrooms, but HelloData already observed 36 distinct 2BR units** leasing over the lease-up — impossible if only 31 exist.
+- It shows **62 three-bedrooms (29%)**, but 3BR is clearly the *smallest* plan: HelloData saw only **7 distinct 3BR** across the entire Nov-2023 → Jun-2026 lease-up, and only **1 of 39** current vacancies is a 3BR.
+- The evidence fits CoStar's 2BR and 3BR figures being **transposed**.
+
+**Best estimate used: ≈ 123 / 62 / 31 (1BR / 2BR / 3BR) — ~57% / 29% / 14%.** This is the only split consistent with all the evidence: 1BR is the largest plan (CoStar's 123, and 1BR carries most of the current vacancy — 31 of 39), 2BR ≥ 36 (satisfied), 3BR smallest. At this mix the Yard blends to **$1,574 gross** (avg SF **929**; CoStar's published avg 1,022 = its 2BR figure, discarded). *Not rent-roll-confirmed* — a Yard rent roll or corrected CoStar/Yardi detail could shift the 2BR/3BR split (3BR could be as low as ~15–20). **The per-bedroom executed rents are firm regardless: 1BR $1,485 · 2BR $1,595 · 3BR $1,885, 0% concession.**
+
+## Model integration — subject row is live-linked (N6:V6)
+The deliverable's **subject row (row 6)** now carries the *same link formulas* as the Kelton model's `Rent Comps - High Level` tab, so the tab drops into the model with row 6 tied to the model's own rent roll rather than a static paste:
+- `N6/Q6/T6` (1/2/3BR **#**) = `SUMIFS(Assumptions!$F$50:$F$54, Assumptions!$C$50:$C$54, {1,2,3})`
+- `O6/R6/U6` (**SF**) and `P6/S6/V6` (**Rent**) = array `SUMPRODUCT(...)` over the Assumptions unit-mix table (SF = col H; Rent = col M, "Y1 Avg Market Rent")
+- `Y6` = `((N6*P6)+(Q6*S6)+(T6*V6))/W6`; `AA6` (Total-Effective) = `='Cash Flow (Annual)'!K5`
+
+Two consequences to note: (1) these resolve to live values **inside the model** and show `#REF!` if the workbook is opened standalone (they reference tabs that only exist in the model); (2) the model links the subject to its **Y1 Avg Market Rent** (1BR $1,343 / 2BR $1,481 / 3BR $1,807 — rent-roll-driven), which is a *different, lower basis* than the HelloData-executed rents used for the comps and shown for the subject in the PNG/map. That is the model's existing convention (subject = its own rent roll; comps = HelloData executed). The `config.json` carries these under `subject_cell_formulas`, and `build_workbook.py` now applies them.
+
 ## Data caveats
-- **The Yard mix is uncertain.** CoStar's Yard mix (123 / 31 / 62 by 1/2/3BR) is odd — it shows only **31 2BR units, yet HelloData observed 36 distinct 2BR units** leasing, which is impossible if only 31 exist. So CoStar likely understates the Yard's 2BR (and overstates 3BR). Per-bedroom **executed rents are firm** (1BR $1,485 · 2BR $1,595 · 3BR $1,885, 0% concession); the **blended total ($1,616) is approximate** because the weights may be off. CoStar's Yard avg SF (1,022, = its 2BR figure, clearly a copy) was replaced with the unit-weighted 969.
 - **Zero-concession comps (HD).** Embold, The Vue (both Ring 3) and the Yard show effective = asking in HelloData. For Embold/Vue this may be HD under-capturing concessions (Wasatch/Perry) — if so their effective rents/PSF are overstated. The Vue's rents also include garage + wifi; the Seasons model adjusts Vue down ~$160/mo for comparability (not applied here — Vue shown as HD-reported).
 - **Thin 3BR executed counts:** Alvera (n=2), Millpond (n=2), Embold (n=1) — directional only. Lehi Tech and The Vue have no 3BR (blank by design).
 - **HelloData name/format:** Terra Vista & Seasons rents come from the second HelloData file, merged into `HelloData_combined_Kelton+TraverseMtn_2026-07-13.csv` so all 10 comps compute on one pull.

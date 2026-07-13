@@ -44,13 +44,13 @@
    "owner": "Gregory Bird",
    "year": 2023,
    "units": 216,
-   "avg_sf": 969,
+   "avg_sf": 929,
    "occ_costar": 0.8194,
    "counts": [
     0,
     123,
-    31,
-    62
+    62,
+    31
    ],
    "bed_sf": [
     null,
@@ -61,7 +61,8 @@
    "address": "1107 W 250 S, American Fork, UT 84003",
    "lat": 40.3715405,
    "lng": -111.8267122,
-   "dist": 0.1
+   "dist": 0.1,
+   "mix_note": "Best estimate; CoStar published 123/31/62 (2BR/3BR transposed). 216u, 3 plans, 3BR smallest."
   },
   {
    "name": "Ember Peaks at American Fork",
@@ -298,5 +299,30 @@
    "dist": 5.3
   }
  ],
- "footnote": "Rent & total-PSF columns are color-scaled down each column across the comps (pale red = lower, pale blue = higher; subject = cream, excluded). Rent (by bedroom) = HelloData T90-day executed asking (market) rent on leases off-market 14 Apr\u201313 Jul 2026; Total\u2013Effective = HelloData effective (net of concessions); Conc = 1 \u2212 Eff \u00f7 Gross. SF (by bedroom & total) = CoStar avg SF by unit type; subject SF/counts = subject rent roll; comp unit counts = CoStar. Occ % = CoStar occupied (1 \u2212 vacancy); Leased % = HelloData. Clusters: American Fork \u2014 Adjacent (right next to the subject) \u00b7 American Fork \u2014 North \u00b7 Lehi / Traverse Mountain. The Yard & Terra Vista are in initial lease-up; Terra Vista & Seasons sit ~5 mi north (outside the 5-mi CoStar pull) so identity/SF/counts come from the TMG Seasons model (CoStar-sourced) and they carry no CoStar occupancy (Leased %-HD shown). Seasons is shown apartment-only (440 units); the adjacent Seasons townhomes on its website are excluded. PSF = total rent \u00f7 total SF."
+ "footnote": "Rent & total-PSF columns are color-scaled down each column across the comps (pale red = lower, pale blue = higher; subject = cream, excluded). Rent (by bedroom) = HelloData T90-day executed asking (market) rent on leases off-market 14 Apr\u201313 Jul 2026; Total\u2013Effective = HelloData effective (net of concessions); Conc = 1 \u2212 Eff \u00f7 Gross. SF (by bedroom & total) = CoStar avg SF by unit type; subject SF/counts = subject rent roll; comp unit counts = CoStar. Occ % = CoStar occupied (1 \u2212 vacancy); Leased % = HelloData. Clusters: American Fork \u2014 Adjacent (right next to the subject) \u00b7 American Fork \u2014 North \u00b7 Lehi / Traverse Mountain. The Yard & Terra Vista are in initial lease-up; Terra Vista & Seasons sit ~5 mi north (outside the 5-mi CoStar pull) so identity/SF/counts come from the TMG Seasons model (CoStar-sourced) and they carry no CoStar occupancy (Leased %-HD shown). Seasons is shown apartment-only (440 units); the adjacent Seasons townhomes on its website are excluded. PSF = total rent \u00f7 total SF.",
+ "subject_cell_formulas": {
+  "N6": "=SUMIFS(Assumptions!$F$50:$F$54,Assumptions!$C$50:$C$54,1)",
+  "O6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=1)*Assumptions!$F$50:$F$54*Assumptions!$H$50:$H$54)/N6"
+  },
+  "P6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=1)*Assumptions!$F$50:$F$54*Assumptions!$M$50:$M$54)/N6"
+  },
+  "Q6": "=SUMIFS(Assumptions!$F$50:$F$54,Assumptions!$C$50:$C$54,2)",
+  "R6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=2)*Assumptions!$F$50:$F$54*Assumptions!$H$50:$H$54)/Q6"
+  },
+  "S6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=2)*Assumptions!$F$50:$F$54*Assumptions!$M$50:$M$54)/Q6"
+  },
+  "T6": "=SUMIFS(Assumptions!$F$50:$F$54,Assumptions!$C$50:$C$54,3)",
+  "U6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=3)*Assumptions!$F$50:$F$54*Assumptions!$H$50:$H$54)/T6"
+  },
+  "V6": {
+   "array": "=SUMPRODUCT((Assumptions!$C$50:$C$54=3)*Assumptions!$F$50:$F$54*Assumptions!$M$50:$M$54)/T6"
+  },
+  "Y6": "=((N6*P6)+(Q6*S6)+(T6*V6))/W6",
+  "AA6": "='Cash Flow (Annual)'!K5"
+ }
 }

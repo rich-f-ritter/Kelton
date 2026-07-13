@@ -130,6 +130,16 @@ def main(cfg_path, out_path=None):
         C(r,10,units,fill=bg)
 
     row(6,"S",cfg["subject"],subject=True)
+    # Optional: overwrite subject-row cells with live model-link formulas so the tab
+    # drops into the TMG model with row 6 tied to its Assumptions / Cash Flow tabs
+    # (values resolve inside the model; standalone they show #REF!). Keys are cell
+    # addresses (e.g. "N6"); a value may be a formula string or {"array": "=..."}.
+    scf = cfg.get("subject_cell_formulas")
+    if scf:
+        from openpyxl.worksheet.formula import ArrayFormula
+        for addr, fml in scf.items():
+            cell = ws[addr]
+            cell.value = ArrayFormula(addr, fml["array"]) if isinstance(fml, dict) else fml
     C(8,1,"Rent Comps",bold=True,color=NAVY,size=11,align="left")
     for j in range(2,LAST+1): C(8,j,"")
     r0=9
