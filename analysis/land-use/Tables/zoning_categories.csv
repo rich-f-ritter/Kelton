@@ -1,0 +1,57 @@
+Category,Jurisdiction,Base Zone,MF Threat (if vacant),Color
+Agricultural / Rural,American Fork,RA-5,Low,#9C8A57
+Commercial,American Fork,CC-1,Low,#1F77B4
+Commercial,American Fork,CC-2,Low,#1F77B4
+Commercial,American Fork,GC-1,Low,#1F77B4
+Commercial,American Fork,GC-2,Low,#1F77B4
+Commercial,American Fork,SC-1,Low,#1F77B4
+Industrial / Business Park,American Fork,I-1,Low,#525252
+Industrial / Business Park,American Fork,PI-1,Low,#525252
+Institutional / Governmental,American Fork,PF,Low,#6BAED6
+Institutional / Governmental,American Fork,S-1,Low,#6BAED6
+Mixed Use,American Fork,TOD,High,#FF8C42
+Multifamily Residential,American Fork,R3-7500,High,#D62728
+Multifamily Residential,American Fork,R4-7500,High,#D62728
+Office,American Fork,PO-1,Low,#9467BD
+Park / Recreation,American Fork,M-1,Low,#2CA02C
+Park / Recreation,American Fork,SP,Low,#2CA02C
+Planned / Overlay,American Fork,PC,Unknown,#B399D4
+Planned / Overlay,American Fork,PR-2.0,Unknown,#B399D4
+Planned / Overlay,American Fork,PR-2.3,Unknown,#B399D4
+Planned / Overlay,American Fork,PR-3.0,Unknown,#B399D4
+Single-Family Residential,American Fork,R1-12000,Low,#FFF6B3
+Single-Family Residential,American Fork,R1-15000,Low,#FFF6B3
+Single-Family Residential,American Fork,R1-20000,Low,#FFF6B3
+Single-Family Residential,American Fork,R1-7500,Low,#FFF6B3
+Single-Family Residential,American Fork,R1-9000,Low,#FFF6B3
+Single-Family Residential,American Fork,RA-1,Low,#FFF6B3
+Two-Family / Low-Density Residential,American Fork,R2-7500,Low,#FCDE9C
+Agricultural / Rural,Lehi,A-1,Low,#9C8A57
+Agricultural / Rural,Lehi,A-5,Low,#9C8A57
+Agricultural / Rural,Lehi,TH-5,Low,#9C8A57
+Commercial,Lehi,C,Low,#1F77B4
+Commercial,Lehi,C-H,Low,#1F77B4
+Commercial,Lehi,C-I,Low,#1F77B4
+Commercial,Lehi,CR,Low,#1F77B4
+Commercial,Lehi,HC,Low,#1F77B4
+Commercial,Lehi,NC,Low,#1F77B4
+Industrial / Business Park,Lehi,BP,Low,#525252
+Industrial / Business Park,Lehi,H/I,Low,#525252
+Industrial / Business Park,Lehi,LI,Low,#525252
+Industrial / Business Park,Lehi,T-M,Low,#525252
+Institutional / Governmental,Lehi,PF,Low,#6BAED6
+Mixed Use,Lehi,MU,High,#FF8C42
+Mixed Use,Lehi,TOD,High,#FF8C42
+Multifamily Residential,Lehi,R-3,High,#D62728
+Planned / Overlay,Lehi,PC,Unknown,#B399D4
+Planned / Overlay,Lehi,RC,Unknown,#B399D4
+Single-Family Residential,Lehi,R-1-10,Low,#FFF6B3
+Single-Family Residential,Lehi,R-1-12,Low,#FFF6B3
+Single-Family Residential,Lehi,R-1-15,Low,#FFF6B3
+Single-Family Residential,Lehi,R-1-22,Low,#FFF6B3
+Single-Family Residential,Lehi,R-1-8,Low,#FFF6B3
+Single-Family Residential,Lehi,R-1-Flex,Low,#FFF6B3
+Single-Family Residential,Lehi,RA-1,Low,#FFF6B3
+Townhouse / Med-Density Residential,Lehi,R-2.5,Medium,#FDBF6F
+Two-Family / Low-Density Residential,Lehi,R-2,Low,#FCDE9C
+No public zoning (data gap),(unzoned / no public GIS),(none),n/a - not assessable,#E3E3E3

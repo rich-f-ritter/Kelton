@@ -1,0 +1,10 @@
+Bucket,Source,Code,Description,Color,Parcels_in_area
+Agricultural / Rural,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,AG,Agricultural / farm building type or rural land,#9C8A57,83
+Apartments / Multifamily,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,MF,Multi-unit residential building (county building type = apartments / multiple-residence / N-unit / tri-fourplex / duplex / group or senior housing),#D62728,250
+Commercial,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,COM,Retail / office / hotel / service (PROP_CLASS Commercial with a non-industrial building type),#1F77B4,415
+Industrial / Service / Auto,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,IND,Warehouse / manufacturing / distribution / storage / auto-service building type,#7F7F7F,125
+Other / Unclassified,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,OTHER,No county property class or building-type signal on record (includes some condo and utility parcels),#D9D9D9,3266
+Public / Airport / Institutional,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,EXEMPT,"PROP_CLASS Tax Exempt, or public / institutional owner or building type",#6BAED6,16
+Single Family Residential,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,SF,Single-family / detached dwelling (PROP_CLASS Residential or single-family building type),#FFF6B3,7428
+Vacant Land,Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes,VAC,County PROP_CLASS = Vacant (unimproved),#2E8B57,542
+Public / Airport / Institutional,OWNER_RULE,(public owner),Government / airport / school / church-owned (overrides use code),#6BAED6,814

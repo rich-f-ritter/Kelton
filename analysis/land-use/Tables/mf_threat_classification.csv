@@ -1,0 +1,56 @@
+Threat Level,Jurisdiction,Base Zone,Zone Category,Definition
+High,American Fork,R3-7500,Multifamily Residential,Multifamily can be built BY-RIGHT - no special approval needed.
+High,American Fork,R4-7500,Multifamily Residential,Multifamily can be built BY-RIGHT - no special approval needed.
+High,American Fork,TOD,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Lehi,MU,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Lehi,R-3,Multifamily Residential,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Lehi,TOD,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+Medium,Lehi,R-2.5,Townhouse / Med-Density Residential,Multifamily possible but CONDITIONAL - townhouse / 3-4-family / mixed-use / TOD / corridor; limited density or special permitting.
+Low,American Fork,CC-1,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,CC-2,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,GC-1,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,GC-2,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,I-1,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,M-1,Park / Recreation,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,PF,Institutional / Governmental,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,PI-1,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,PO-1,Office,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R1-12000,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R1-15000,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R1-20000,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R1-7500,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R1-9000,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,R2-7500,Two-Family / Low-Density Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,RA-1,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,RA-5,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,S-1,Institutional / Governmental,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,SC-1,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,American Fork,SP,Park / Recreation,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,A-1,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,A-5,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,BP,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,C,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,C-H,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,C-I,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,CR,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,H/I,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,HC,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,LI,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,NC,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,PF,Institutional / Governmental,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-10,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-12,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-15,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-22,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-8,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-1-Flex,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,R-2,Two-Family / Low-Density Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,RA-1,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,T-M,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Lehi,TH-5,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Unknown,American Fork,PC,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,American Fork,PR-2.0,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,American Fork,PR-2.3,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,American Fork,PR-3.0,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,Lehi,PC,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,Lehi,RC,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.

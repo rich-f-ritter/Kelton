@@ -17,3 +17,9 @@ Thumbs.db
 
 # LibreOffice recalc leftovers
 .recalc/
+
+# Land-use analysis: heavy regenerable intermediates (deliverables embed this data)
+analysis/land-use/in/_ck/
+analysis/land-use/in/parcels_all.geojson
+analysis/land-use/in/parcels_classified.geojson
+analysis/land-use/in/zoning.geojson

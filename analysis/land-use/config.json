@@ -1,0 +1,194 @@
+{
+  "subject": {
+    "name": "The Kelton",
+    "address": "301 S 1100 W, American Fork, UT 84003",
+    "lat": 40.370787,
+    "lon": -111.824874,
+    "location_note": "Verified against the Utah County LIR parcel footprint for 'Kelton Apartments Phase 1 Plat' (serials 44-238-0002..0015, situs 301 S 1100 W, built 2023). The US Census geocoder mis-matched the mailing address to '301 N 1100 E' (~2.9 mi ENE, wrong quadrant); overridden to the true parcel-union centroid.",
+    "mailing_geocode": {
+      "source": "US Census onelineaddress (Public_AR_Current)",
+      "matched": "301 N 1100 E, AMERICAN FORK, UT 84003",
+      "lon": -111.769161,
+      "lat": 40.383186,
+      "note": "wrong quadrant (N/E vs S/W) - rejected in favor of parcel footprint"
+    }
+  },
+
+  "analysis_area": {
+    "mode": "radius",
+    "radius_mi": 2.0,
+    "note": "2-mile radius around the verified subject point. Captures west/central American Fork and east/central Lehi (the immediate competitive supply area). The broader 5-mile competitive set is covered by the separate supply-chart workstream."
+  },
+
+  "parcel_sources": [
+    {
+      "name": "Utah County Parcels LIR (UGRC statewide LIR schema)",
+      "county": "Utah",
+      "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/Parcels_Utah_LIR/FeatureServer/0/query",
+      "fields": {
+        "account": "PARCEL_ID",
+        "situs": "PARCEL_ADD",
+        "landuse_code": "PROP_CLASS",
+        "total_value": "TOTAL_MKT_VALUE",
+        "year_built": "BUILT_YR"
+      },
+      "dedupe_field": "PARCEL_ID",
+      "data_confidence": "full",
+      "verify_ssl": true
+    }
+  ],
+
+  "owner_source": {
+    "name": "Utah County Parcels (UGRC, ownership schema)",
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/Parcels_Utah/FeatureServer/0/query",
+    "key_field": "PARCEL_ID",
+    "owner_field": "OWNERNAME",
+    "note": "The LIR schema withholds owner names; owner is joined on PARCEL_ID from UGRC's companion ownership layer (same host)."
+  },
+
+  "landuse_enrich": {
+    "prop_class_field": "PROP_CLASS",
+    "bldg_type_field": "BLDG_SQFT_INFO",
+    "land_value_field": "LAND_MKT_VALUE",
+    "total_value_field": "TOTAL_MKT_VALUE",
+    "house_cnt_field": "HOUSE_CNT",
+    "subdiv_field": "SUBDIV_NAME",
+    "taxexempt_field": "TAXEXEMPT_TYPE",
+    "note": "Synthetic land-use code is derived per parcel from the county PROP_CLASS plus the mass-appraisal building type (BLDG_SQFT_INFO). PROP_CLASS='Vacant' -> VAC; 'Tax Exempt' -> EXEMPT; otherwise the building type carves out Apartments/Multifamily, Commercial, Industrial, Agricultural, and Institutional, falling back to Residential=SF and Unknown/blank=OTHER. See decisions log section 4."
+  },
+
+  "zoning_sources": [
+    {
+      "jurisdiction": "American Fork",
+      "url": "https://maps.afcity.org/arcgis/rest/services/Planning/Zoning2/MapServer/0/query",
+      "code_field": "ZONECLASS",
+      "desc_field": "ZONEDESC",
+      "format": "esrijson",
+      "verify_ssl": false
+    },
+    {
+      "jurisdiction": "Lehi",
+      "url": "https://services5.arcgis.com/rObWD7PYeLl9jJPT/arcgis/rest/services/Lehi_Zoning/FeatureServer/0/query",
+      "code_field": "Zone",
+      "desc_field": "Zone",
+      "verify_ssl": true
+    }
+  ],
+
+  "landuse_scheme": {
+    "name": "Utah County LIR PROP_CLASS + county building type (BLDG_SQFT_INFO) -> synthetic land-use codes",
+    "vacant_buckets": ["Vacant Land"],
+    "vacant_note": "County assessor PROP_CLASS = 'Vacant' (unimproved/vacant class). Agricultural greenbelt land is classed Agricultural/Rural, not Vacant, and is not counted as a by-right apartment site.",
+    "default_bucket": "Other / Unclassified",
+    "public_owner_regex": "(AMERICAN FORK CITY|LEHI CITY|SARATOGA SPRINGS|PLEASANT GROVE|HIGHLAND CITY|CEDAR HILLS|ALPINE CITY|UTAH COUNTY|STATE OF UTAH|\\bUDOT\\b|UNITED STATES|\\bUSA\\b|ALPINE SCHOOL|SCHOOL DIST|\\bDISTRICT\\b|UNIVERSITY|CEMETERY|\\bCHURCH\\b|PRESIDING BISHOP|CORP OF THE PRESIDING|LATTER.?DAY|\\bLDS\\b|IRRIGATION|WATER DISTRICT|METROPOLITAN WATER)",
+    "codes": {
+      "MF":     ["Apartments / Multifamily", "Multi-unit residential building (county building type = apartments / multiple-residence / N-unit / tri-fourplex / duplex / group or senior housing)"],
+      "SF":     ["Single Family Residential", "Single-family / detached dwelling (PROP_CLASS Residential or single-family building type)"],
+      "VAC":    ["Vacant Land", "County PROP_CLASS = Vacant (unimproved)"],
+      "COM":    ["Commercial", "Retail / office / hotel / service (PROP_CLASS Commercial with a non-industrial building type)"],
+      "IND":    ["Industrial / Service / Auto", "Warehouse / manufacturing / distribution / storage / auto-service building type"],
+      "AG":     ["Agricultural / Rural", "Agricultural / farm building type or rural land"],
+      "EXEMPT": ["Public / Airport / Institutional", "PROP_CLASS Tax Exempt, or public / institutional owner or building type"],
+      "OTHER":  ["Other / Unclassified", "No county property class or building-type signal on record (includes some condo and utility parcels)"]
+    }
+  },
+
+  "zoning_crosswalk": {
+    "American Fork": {
+      "R1-7500":  ["Single-Family Residential", "Low"],
+      "R1-9000":  ["Single-Family Residential", "Low"],
+      "R1-12000": ["Single-Family Residential", "Low"],
+      "R1-15000": ["Single-Family Residential", "Low"],
+      "R1-20000": ["Single-Family Residential", "Low"],
+      "RA-1":     ["Single-Family Residential", "Low"],
+      "RA-5":     ["Agricultural / Rural", "Low"],
+      "R2-7500":  ["Two-Family / Low-Density Residential", "Low"],
+      "R3-7500":  ["Multifamily Residential", "High"],
+      "R4-7500":  ["Multifamily Residential", "High"],
+      "PR-2.0":   ["Planned / Overlay", "Unknown"],
+      "PR-2.3":   ["Planned / Overlay", "Unknown"],
+      "PR-3.0":   ["Planned / Overlay", "Unknown"],
+      "PC":       ["Planned / Overlay", "Unknown"],
+      "TOD":      ["Mixed Use", "High"],
+      "PO-1":     ["Office", "Low"],
+      "CC-1":     ["Commercial", "Low"],
+      "CC-2":     ["Commercial", "Low"],
+      "GC-1":     ["Commercial", "Low"],
+      "GC-2":     ["Commercial", "Low"],
+      "SC-1":     ["Commercial", "Low"],
+      "S-1":      ["Institutional / Governmental", "Low"],
+      "PF":       ["Institutional / Governmental", "Low"],
+      "I-1":      ["Industrial / Business Park", "Low"],
+      "PI-1":     ["Industrial / Business Park", "Low"],
+      "M-1":      ["Park / Recreation", "Low"],
+      "SP":       ["Park / Recreation", "Low"]
+    },
+    "Lehi": {
+      "A-1":      ["Agricultural / Rural", "Low"],
+      "A-5":      ["Agricultural / Rural", "Low"],
+      "RA-1":     ["Single-Family Residential", "Low"],
+      "R-1-8":    ["Single-Family Residential", "Low"],
+      "R-1-10":   ["Single-Family Residential", "Low"],
+      "R-1-12":   ["Single-Family Residential", "Low"],
+      "R-1-15":   ["Single-Family Residential", "Low"],
+      "R-1-22":   ["Single-Family Residential", "Low"],
+      "R-1-Flex": ["Single-Family Residential", "Low"],
+      "R-2":      ["Two-Family / Low-Density Residential", "Low"],
+      "R-2.5":    ["Townhouse / Med-Density Residential", "Medium"],
+      "R-3":      ["Multifamily Residential", "High"],
+      "TH-5":     ["Agricultural / Rural", "Low"],
+      "T-M":      ["Industrial / Business Park", "Low"],
+      "BP":       ["Industrial / Business Park", "Low"],
+      "LI":       ["Industrial / Business Park", "Low"],
+      "H/I":      ["Industrial / Business Park", "Low"],
+      "C":        ["Commercial", "Low"],
+      "C-H":      ["Commercial", "Low"],
+      "C-I":      ["Commercial", "Low"],
+      "HC":       ["Commercial", "Low"],
+      "NC":       ["Commercial", "Low"],
+      "CR":       ["Commercial", "Low"],
+      "RC":       ["Planned / Overlay", "Unknown"],
+      "MU":       ["Mixed Use", "High"],
+      "TOD":      ["Mixed Use", "High"],
+      "PC":       ["Planned / Overlay", "Unknown"],
+      "PF":       ["Institutional / Governmental", "Low"]
+    }
+  },
+
+  "zone_plain": {
+    "R1-7500": "Single-Family (7,500 sf)", "R1-9000": "Single-Family (9,000 sf)",
+    "R1-12000": "Single-Family (12,000 sf)", "R1-15000": "Single-Family (15,000 sf)",
+    "R1-20000": "Single-Family (20,000 sf)", "RA-1": "Residential Agricultural (1 ac)",
+    "RA-5": "Residential Agricultural (5 ac)", "R2-7500": "Two-Family / Duplex",
+    "R3-7500": "Multifamily (R3)", "R4-7500": "Multifamily (R4)",
+    "PR-2.0": "Planned Residential 2.0", "PR-2.3": "Planned Residential 2.3",
+    "PR-3.0": "Planned Residential 3.0", "PC": "Planned Community",
+    "TOD": "Transit-Oriented Development", "PO-1": "Professional Office",
+    "CC-1": "Central Commercial", "CC-2": "Central Commercial",
+    "GC-1": "General Commercial", "GC-2": "Planned Commercial",
+    "SC-1": "Planned Shopping Center", "S-1": "Special Institutional",
+    "PF": "Public Facilities", "I-1": "Industrial", "PI-1": "Planned Industrial",
+    "M-1": "Marina", "SP": "Shoreline Protection",
+    "A-1": "Agricultural (1 ac)", "A-5": "Agricultural (5 ac)",
+    "R-1-8": "Single-Family (8k)", "R-1-10": "Single-Family (10k)",
+    "R-1-12": "Single-Family (12k)", "R-1-15": "Single-Family (15k)",
+    "R-1-22": "Single-Family (22k)", "R-1-Flex": "Single-Family Flex",
+    "R-2": "Two-Family / Duplex", "R-2.5": "Medium-Density Residential",
+    "R-3": "High-Density Residential", "TH-5": "Transitional Holding",
+    "T-M": "Technology / Manufacturing", "BP": "Business Park",
+    "LI": "Light Industrial", "H/I": "Heavy Industrial", "C": "Commercial",
+    "C-H": "Highway Commercial", "C-I": "Commercial / Industrial",
+    "HC": "Highway Commercial", "NC": "Neighborhood Commercial",
+    "CR": "Commercial", "RC": "Resort Community", "MU": "Mixed Use"
+  },
+
+  "nondev_owner_regex": "(AMERICAN FORK CITY|LEHI CITY|SARATOGA SPRINGS|PLEASANT GROVE|HIGHLAND CITY|CEDAR HILLS|ALPINE CITY|UTAH COUNTY|STATE OF UTAH|\\bUDOT\\b|UNITED STATES|\\bUSA\\b|ALPINE SCHOOL|SCHOOL DIST|\\bDISTRICT\\b|UNIVERSITY|CEMETERY|\\bCHURCH\\b|PRESIDING BISHOP|CORP OF THE PRESIDING|LATTER.?DAY|\\bLDS\\b|\\bHOA\\b|HOMEOWN|OWNERS ASS|ASSOCIATION|\\bASSN\\b|\\bPOA\\b|CONDO|MASTER ASSOC|TOWNHOME OWNER|IRRIGATION|CANAL|WATER DISTRICT|METROPOLITAN WATER|RECREATION DIST)",
+  "company_owner_regex": "(\\bLLC\\b|\\bL C\\b|\\bLC\\b|\\bLP\\b|\\bLTD\\b|\\bINC\\b|\\bLLLP\\b|\\bLLP\\b|TRUST|PARTNERS|HOLDINGS|DEVELOP|PROPERTIES|\\bGROUP\\b|VENTURES?|REALTY|CAPITAL|\\bHOMES\\b|BUILDERS|INVESTMENT|COMMUNITIES|MANAGEMENT)",
+
+  "min_acres": 1.0,
+  "min_compactness": 0.16,
+  "data_gap_label": "No public zoning (data gap)",
+  "crs_local": null,
+
+  "branding": { "primary": "#0B3D5C", "accent": "#B08D3E" }
+}
