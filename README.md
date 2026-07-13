@@ -87,4 +87,34 @@ analysis/                      Our work product
 
 ---
 
-*Deal folder initialized 2026-07-13.*
+## Analysis outputs (2026-07-13)
+
+Start with **`analysis/notes/Cross_Workstream_Review.md`** — it ties the four workstreams
+into one underwriting picture and cross-checks every shared figure.
+
+| Workstream | Location | Headline |
+|---|---|---|
+| **Underwriting intake** (RR-T12, audit mode) | `analysis/rr-t12-intake/` | Standardized in-place **NOI $3.01M** (62% margin), occ 93.75%. Operator's printed NOI ($3.36M) overstates true NOI ~$353k by booking taxes+insurance below its NOI line. HD T90 market rent $1,595 / eff $1,501. |
+| **Rent comps – high level** | `analysis/rent-comps/` | Subject **~4% under** comp rent/unit ($1,595 vs $1,660), at par on $/SF. Mark-to-market concentrated in **2BR (−5.2%, 55% of units)** and 3BR. Workbook + satellite map + preview. |
+| **Supply chart** | `analysis/supply-chart/` | 7,632-unit 5-mi inventory; **zero forward pipeline**; re-stabilizes to **95% occ by Y1** under base demand. Workbook + map. |
+| **Real-estate tax** | `analysis/tax/` | In-place **$302,467/yr** ($1,260/unit); reassessment-on-sale → **~$350k at $300k/unit**. Reconciles the RedIQ tax line to the penny. |
+
+**Underwriting bottom line (from the review):** standardized in-place NOI ≈ **$3.01M**; adding
+the omitted commercial parcel trims true in-place NOI to ≈ **$3.00M**; the Utah tax reset on
+sale (~$300k/unit basis) yields a **Year-1 reassessed NOI ≈ $2.95M** before rent growth — with
+loss-to-lease + mark-to-market upside supported by a market that has **no forward supply**.
+
+**Blocking items before underwriting** (see the review for the full list): model the tax reset
+to purchase price (+ add parcel 001); underwrite Other Income/RUBS to the **T12**, not the rent
+roll (the roll omits ~$329k/yr of RUBS); carry the standardized **$3.01M NOI**, not the operator's
+$3.36M; and **confirm the auto-selected rent-comp set** (consider adding The Yard, Solhavn).
+
+## Analysis tooling note
+
+The `rr-t12-processor` skill's parser was extended during this run to read the operator's
+**ResMan/Neighborly** rent-roll and T12 export layout (the initial run parsed 0 units). Those
+fixes live in `.claude/skills/rr-t12-processor/scripts/` and are committed with the deliverable.
+
+---
+
+*Deal folder initialized 2026-07-13. Analysis run 2026-07-13.*
